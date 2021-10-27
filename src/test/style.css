@@ -1,0 +1,10 @@
+h1 {
+    text-align: center;
+    font-weight: lighter;
+    letter-spacing: -0.05rem;
+}
+
+#map { 
+    height: 80vh;
+    border: 1px solid black;
+}
