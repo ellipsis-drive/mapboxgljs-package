@@ -16,7 +16,7 @@ class EllipsisRasterLayer {
             tiles: [
                 this.url
             ],
-            tileSize: 128 //TODO check what the tile size is
+            tileSize: 128
         });
 
         map.addLayer(this);
