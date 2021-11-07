@@ -68,7 +68,6 @@ class EllipsisVectorLayer {
                 features: []
             }
         });
-
         map.addLayer({
             id: `${this.id}_fill`,
             type: 'fill',
@@ -294,9 +293,8 @@ const styleGeoJson = (geoJson, weight, radius) => {
     if(type === 'MultiPolygon' || type === 'Polygon') {
         //TODO fix mistake in other packages where color length is compared with 10
         if(isHexColorFormat && color.length === 9)
-            properties.fillOpacity = parseInt(color.substring(7,9), 16) / 255;
+            properties.fillOpacity = parseInt(color.substring(8,10), 16) / 25.5;
         else properties.fillOpacity = 0.6;
-        //TODO fix in other packages: wrong substring of color to find opacity
         properties.weight = weight;
     }
     //TODO: weight default on 8 for LineString and MultiLineString?
