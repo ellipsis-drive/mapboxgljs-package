@@ -1,3 +1,5 @@
+"use strict"
+
 class EllipsisVectorLayer {
     constructor(
         blockId,
@@ -49,12 +51,10 @@ class EllipsisVectorLayer {
     /**
      * @returns mapbox layer
      */
-    getLayer() {
-        return {
-            id: this.id,
-            source: this.sourceId,
-            type: "line",
-        };
+    getLayers() {
+        if(!this.map) return [];
+        if(!this.map.getStyle() || !this.map.getStyle().layers) return [];
+        return this.map.getStyle().layers.filter(x => x.id.startsWith(this.id));
     }
 
     addTo(map) {
@@ -69,29 +69,45 @@ class EllipsisVectorLayer {
             }
         });
 
-        // map.addLayer(this.getLayer());
-
-        // Add a new layer to visualize the polygon.
         map.addLayer({
-            'id': 'maine',
-            'type': 'fill',
-            'source': this.sourceId, // reference the data source
-            'layout': {},
-            'paint': {
-                'fill-color': '#0080ff', // blue color fill
-                'fill-opacity': 0.5
-            }
+            id: `${this.id}_fill`,
+            type: 'fill',
+            source: this.sourceId,
+            layout: {},
+            paint: {
+                'fill-color': ['get', 'color'],
+                'fill-opacity': ['get', 'fillOpacity']
+            },
+            filter: ['any',
+                ['==', '$type', 'Polygon'],
+            ]
         });
-        // Add a black outline around the polygon.
         map.addLayer({
-            'id': 'outline',
-            'type': 'line',
-            'source': this.sourceId,
-            'layout': {},
-            'paint': {
-                'line-color': '#000',
-                'line-width': 3
-            }
+            id: `${this.id}_outline`,
+            type: 'line',
+            source: this.sourceId,
+            layout: {},
+            paint: {
+                'line-color': ['get', 'color'],
+                'line-width': ['get', 'weight']
+            },
+            filter: ['any',
+                ['==', '$type', 'Polygon'],
+                ['==', '$type', 'LineString']
+            ]
+        });
+        map.addLayer({
+            id: `${this.id}_points`,
+            type: 'circle',
+            source: this.sourceId,
+            layout: {},
+            paint: {
+                'circle-radius': ['get', 'radius'],
+                'circle-color': ['get', 'color']
+            },
+            filter: ['any',
+                ['==', '$type', 'Point']
+            ]
         });
 
         this.source = map.getSource(this.sourceId);
@@ -213,7 +229,7 @@ class EllipsisVectorLayer {
             tileData.size = tileData.size + result[j].size;
             tileData.amount = tileData.amount + result[j].result.features.length;
             tileData.nextPageStart = result[j].nextPageStart;
-            // console.log(`added new page start ${tileData.nextPageStart}`);
+            result[j].result.features.forEach(x => styleGeoJson(x));
             tileData.elements = tileData.elements.concat(result[j].result.features);
     
             //TODO add onFeatureClick function support
@@ -267,13 +283,34 @@ class EllipsisVectorLayer {
 
 const getTileId = (tile) => `${tile.zoom}_${tile.tileX}_${tile.tileY}`;
 
-const createGeoJsonLayerStyle = (color, fillOpacity, weight) => {
-    return {
-        color: color ? color : "#3388ff",
-        weight: weight ? weight : 5,
-        fillOpacity: fillOpacity ? fillOpacity : 0.06,
-    };
-};
+const styleGeoJson = (geoJson, weight, radius) => {
+    if(!geoJson || !geoJson.geometry || !geoJson.geometry.type || !geoJson.properties) return;
+
+    const type = geoJson.geometry.type;
+    const properties = geoJson.properties;
+    const color = properties.color;
+    const isHexColorFormat = /^#?([A-Fa-f0-9]{2}){3,4}$/.test(color);
+
+    if(type === 'MultiPolygon' || type === 'Polygon') {
+        //TODO fix mistake in other packages where color length is compared with 10
+        if(isHexColorFormat && color.length === 9)
+            properties.fillOpacity = parseInt(color.substring(7,9), 16) / 255;
+        else properties.fillOpacity = 0.6;
+        //TODO fix in other packages: wrong substring of color to find opacity
+        properties.weight = weight;
+    }
+    //TODO: weight default on 8 for LineString and MultiLineString?
+
+    else if(type === 'Point' || type === 'MultiPoint') {
+        //TODO: weight default on 8 for LineString and MultiLineString?
+        properties.radius = radius;
+        properties.weight = 2;
+    }
+
+    if(isHexColorFormat && color.length === 9)
+        properties.color = color.substring(0,7);
+    //TODO asMarker in other packages is always false?
+}
 
 const boundsToTiles = (bounds, zoom) => {
     const xMin = Math.max(bounds.xMin, -180);
