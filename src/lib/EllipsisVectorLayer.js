@@ -63,14 +63,41 @@ class EllipsisVectorLayer {
         
         map.addSource(this.sourceId, {
             type: "geojson",
-            data: {}
+            data: {
+                type: "FeatureCollection",
+                features: []
+            }
         });
 
-        map.addLayer(this.getLayer());
+        // map.addLayer(this.getLayer());
+
+        // Add a new layer to visualize the polygon.
+        map.addLayer({
+            'id': 'maine',
+            'type': 'fill',
+            'source': this.sourceId, // reference the data source
+            'layout': {},
+            'paint': {
+                'fill-color': '#0080ff', // blue color fill
+                'fill-opacity': 0.5
+            }
+        });
+        // Add a black outline around the polygon.
+        map.addLayer({
+            'id': 'outline',
+            'type': 'line',
+            'source': this.sourceId,
+            'layout': {},
+            'paint': {
+                'line-color': '#000',
+                'line-width': 3
+            }
+        });
 
         this.source = map.getSource(this.sourceId);
 
         this.registerViewportUpdate();
+        this.viewPortRefreshed = true;
 
         this.gettingVectorsInterval = setInterval(async () => {
             let loadedSomething = await this.getVectors();
@@ -124,8 +151,6 @@ class EllipsisVectorLayer {
         const tiles = this.tiles.map((t) => {
             const tileId = getTileId(t);
 
-            t.zoom = parseInt(t.zoom, 10);
-
             //If not cached, always try to load features.
             if(!this.cache[tileId]) 
                 return { tileId: t}
@@ -139,6 +164,9 @@ class EllipsisVectorLayer {
 
             return null;
         }).filter(x => x);
+        
+        // console.log("tiles:");
+        // console.log(tiles);
 
         if(tiles.length === 0) return false;
 
@@ -158,9 +186,9 @@ class EllipsisVectorLayer {
         for (let k = 0; k < tiles.length; k += chunkSize) {
             body.tiles = tiles.slice(k, k + chunkSize);
             try {
+                // console.log(body);
                 const res = await EllipsisApi.post("/geometry/tile", body, this.token);
-                result.concat(res);
-                console.log(res);
+                result = result.concat(res);
             } catch {
                 return false;
             }
@@ -169,11 +197,6 @@ class EllipsisVectorLayer {
         //Add newly loaded data to cache
         for (let j = 0; j < tiles.length; j++) {
             const tileId = getTileId(tiles[j].tileId);
-            
-            if(!result[j]){
-                console.warn(`Failed to load data for tile ${tileId}`);
-                continue;
-            }
 
             if (!this.cache[tileId]) {
                 this.cache[tileId] = {
@@ -190,56 +213,33 @@ class EllipsisVectorLayer {
             tileData.size = tileData.size + result[j].size;
             tileData.amount = tileData.amount + result[j].result.features.length;
             tileData.nextPageStart = result[j].nextPageStart;
+            // console.log(`added new page start ${tileData.nextPageStart}`);
             tileData.elements = tileData.elements.concat(result[j].result.features);
     
             //TODO add onFeatureClick function support
             //TODO add default layer style with createGeoJsonLayerStyle
         }
-        console.log(this.cache);
         return true;
     };
 
     updateView = (loading) => {
         if (!this.tiles || this.tiles.length === 0) return;
 
-        if (!this.viewPortRefreshed && !loading) {
-            console.log("no need to refresh view");
-            return;
-        }
+        //No need to update the view if there's no change in the viewport.
+        //Reduces about 1-3 ms of calculations when map is not moving.
+        if(!this.viewPortRefreshed) return;
 
         const features = this.tiles.flatMap((t) => {
             const geoTile = this.cache[getTileId(t)];
             return geoTile ? geoTile.elements : [];
         });
 
-        if (this.viewPortRefreshed) {
-            //if still loading, only display new features when there are more
-            //than already in the view.
-
-            //## 2 different options:
-            //1) load double elements when certain percentage is not loaded
-            //2) wait with showing newly loaded elements until certain percentage is loaded
-
-            // ## option 1
-            // if(!loading || this.getLayers().length/2 <= layerElements.length) {
-            //     console.log('refreshing tiles');
-            //     this.viewPortRefreshed = false;
-            //     this.clearLayers();
-            // }
-
-            // ## option 2
-            // if (loading && this.getLayers().length / 2 > layerElements.length)
-            //     return;
-            // console.log("refreshing tiles");
-            // this.viewPortRefreshed = false;
-            // this.clearLayers();
-        }
-        // console.log('features: ');
-        // console.log(features);
         this.getSource().setData({
             type: "FeatureCollection",
             features: features
         });
+
+        if(!loading) this.viewPortRefreshed = false;
     };
 
     selectFeature = async (feature) => {
@@ -326,5 +326,7 @@ const getMapBounds = (map) => {
         yMin: screenBounds.getSouth(),
         yMax: screenBounds.getNorth(),
     };
-    return { bounds: bounds, zoom: map.getZoom() };
+
+    //Mapbox uses 512x512 tiles, and ellipsis uses 256x256 tiles. So increase zoom with 1. 'zoom256 = zoom512 + 1'
+    return { bounds: bounds, zoom: parseInt(map.getZoom() + 1, 10) };
 };
