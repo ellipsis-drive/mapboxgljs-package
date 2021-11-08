@@ -15,7 +15,8 @@ class EllipsisVectorLayer {
         maxTilesInCache,
         maxFeaturesPerTile,
         radius,
-        lineWidth
+        lineWidth,
+        useMarkers
     ) {
         this.id = `${blockId}_${layerId}`;
         this.sourceId = `${this.id}_source`;
@@ -35,9 +36,11 @@ class EllipsisVectorLayer {
         this.maxFeaturesPerTile = maxFeaturesPerTile;
         this.radius = radius;
         this.lineWidth = lineWidth;
+        this.useMarkers = useMarkers;
 
         this.tiles = [];
         this.cache = [];
+        this.markers = [];
         this.zoom = 1;
         this.changed = false;
     }
@@ -71,6 +74,7 @@ class EllipsisVectorLayer {
         map.addLayer({
             id: `${this.id}_fill`,
             type: 'fill',
+            interactive: this.onFeatureClick ? true : false,
             source: this.sourceId,
             layout: {},
             paint: {
@@ -84,6 +88,7 @@ class EllipsisVectorLayer {
         map.addLayer({
             id: `${this.id}_outline`,
             type: 'line',
+            interactive: this.onFeatureClick ? true : false,
             source: this.sourceId,
             layout: {},
             paint: {
@@ -96,20 +101,21 @@ class EllipsisVectorLayer {
             ]
         });
 
-        //TODO 'asMarker' instead here?
-        map.addLayer({
-            id: `${this.id}_points`,
-            type: 'circle',
-            source: this.sourceId,
-            layout: {},
-            paint: {
-                'circle-radius': ['get', 'radius'],
-                'circle-color': ['get', 'color']
-            },
-            filter: ['any',
-                ['==', '$type', 'Point']
-            ]
-        });
+        if(!this.useMarkers)
+            map.addLayer({
+                id: `${this.id}_points`,
+                type: 'circle',
+                interactive: this.onFeatureClick ? true : false,
+                source: this.sourceId,
+                layout: {},
+                paint: {
+                    'circle-radius': ['get', 'radius'],
+                    'circle-color': ['get', 'color']
+                },
+                filter: ['any',
+                    ['==', '$type', 'Point']
+                ]
+            });
 
         //Handle feature clicks and mouse styling
         if(this.onFeatureClick){
@@ -125,40 +131,81 @@ class EllipsisVectorLayer {
 
         this.source = map.getSource(this.sourceId);
 
-        this.registerViewportUpdate();
-        this.viewPortRefreshed = true;
-
-        this.gettingVectorsInterval = setInterval(async () => {
-            let loadedSomething = await this.getVectors();
-            this.updateView(loadedSomething);
-        }, 100);
+        this.handleViewportUpdate();
 
         map.on("zoom", (x) => {
-            this.registerViewportUpdate();
-            this.viewPortRefreshed = true;
+            this.handleViewportUpdate();
         });
 
         map.on("moveend", (x) => {
-            this.registerViewportUpdate();
-            this.viewPortRefreshed = true;
+            this.handleViewportUpdate();
         });
-        //TODO clear interval somewhere
         return this;
     }
 
-    registerViewportUpdate = () => {
+    handleViewportUpdate = () => {
         const viewport = getMapBounds(this.map);
         if (!viewport) return;
         this.zoom = Math.max(Math.min(this.maxZoom, viewport.zoom - 2), 0);
         this.tiles = boundsToTiles(viewport.bounds, this.zoom);
+
+        if(this.gettingVectorsInterval) return;
+
+        this.gettingVectorsInterval = setInterval(async () => {
+            if(this.isLoading) return;
+
+            const loadedSomething = await this.load();
+            if(!loadedSomething) {
+                clearInterval(this.gettingVectorsInterval);
+                this.gettingVectorsInterval = undefined;
+                return;
+            }
+            this.updateView();
+        }, 100);
     };
 
-    getVectors = async () => {
-        if (this.gettingVectors) return true;
-        this.gettingVectors = true;
-        const now = Date.now();
+    updateView = () => {
+        if (!this.tiles || this.tiles.length === 0) return;
 
-        //clear cache
+        const features = this.tiles.flatMap((t) => {
+            const geoTile = this.cache[getTileId(t)];
+            return geoTile ? geoTile.elements : [];
+        });
+
+        if(this.useMarkers) {
+            let points = features.flatMap((x) => {
+                if(x.geometry.type === 'Point') {
+                    return new mapboxgl.Marker({color: x.properties.color}).setLngLat(x.geometry.coordinates);
+                } else if(x.geometry.type === 'MultiPoint') {
+                    return x.geometry.coordinates.map(c => new mapboxgl.Marker({color: x.properties.color}).setLngLat(c));
+                }
+                return [];
+            });
+            this.markers.forEach(x => x.remove());
+            points.forEach(x => {
+                if(this.onFeatureClick){
+                    x.getElement().addEventListener('click', this.onFeatureClick);
+                }
+                x.addTo(this.map);
+                this.markers.push(x);
+            });
+        }
+
+        this.getSource().setData({
+            type: "FeatureCollection",
+            features: features
+        });
+    };
+
+    load = async () => {
+        this.isLoading = true;
+        this.ensureMaxCacheSize();
+        const cachedSomething = await this.getAndCacheGeoJsons();
+        this.isLoading = false;
+        return cachedSomething;
+    };
+
+    ensureMaxCacheSize = () => {
         const keys = Object.keys(this.cache);
         if (keys.length > this.maxTilesInCache) {
             const dates = keys.map((k) => this.cache[k].date).sort();
@@ -169,13 +216,10 @@ class EllipsisVectorLayer {
                 }
             });
         }
-        const cachedSomething = await this.cacheGeoJsons(now);
-        this.gettingVectors = false;
-        return cachedSomething;
-    };
+    }
 
-    cacheGeoJsons = async (date) => {
-        
+    getAndCacheGeoJsons = async () => {
+        const date = Date.now();
         //create tiles parameter which contains tiles that need to load more features
         const tiles = this.tiles.map((t) => {
             const tileId = getTileId(t);
@@ -242,7 +286,7 @@ class EllipsisVectorLayer {
             tileData.size = tileData.size + result[j].size;
             tileData.amount = tileData.amount + result[j].result.features.length;
             tileData.nextPageStart = result[j].nextPageStart;
-            result[j].result.features.forEach(x => styleGeoJson(x));
+            result[j].result.features.forEach(x => styleGeoJson(x, this.lineWidth, this.radius));
             tileData.elements = tileData.elements.concat(result[j].result.features);
     
             //TODO add onFeatureClick function support
@@ -251,25 +295,7 @@ class EllipsisVectorLayer {
         return true;
     };
 
-    updateView = (loading) => {
-        if (!this.tiles || this.tiles.length === 0) return;
-
-        //No need to update the view if there's no change in the viewport.
-        //Reduces about 1-3 ms of calculations when map is not moving.
-        if(!this.viewPortRefreshed) return;
-
-        const features = this.tiles.flatMap((t) => {
-            const geoTile = this.cache[getTileId(t)];
-            return geoTile ? geoTile.elements : [];
-        });
-
-        this.getSource().setData({
-            type: "FeatureCollection",
-            features: features
-        });
-
-        if(!loading) this.viewPortRefreshed = false;
-    };
+    
 }
 
 const getTileId = (tile) => `${tile.zoom}_${tile.tileX}_${tile.tileY}`;
