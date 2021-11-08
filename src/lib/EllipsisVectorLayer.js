@@ -4,7 +4,7 @@ class EllipsisVectorLayer {
     constructor(
         blockId,
         layerId,
-        selectFeature,
+        onFeatureClick,
         token,
         styleId,
         filter,
@@ -23,7 +23,8 @@ class EllipsisVectorLayer {
         this.blockId = blockId;
         this.layerId = layerId;
         this.maxZoom = maxZoom;
-        this.selectFeatureParam = selectFeature;
+        //TODO fix this in other packages
+        this.onFeatureClick = onFeatureClick;
         this.token = token;
         this.styleId = styleId;
         this.filter = filter;
@@ -60,7 +61,6 @@ class EllipsisVectorLayer {
     addTo(map) {
         this.map = map;
 
-        
         map.addSource(this.sourceId, {
             type: "geojson",
             data: {
@@ -95,6 +95,8 @@ class EllipsisVectorLayer {
                 ['==', '$type', 'LineString']
             ]
         });
+
+        //TODO 'asMarker' instead here?
         map.addLayer({
             id: `${this.id}_points`,
             type: 'circle',
@@ -108,6 +110,18 @@ class EllipsisVectorLayer {
                 ['==', '$type', 'Point']
             ]
         });
+
+        //Handle feature clicks and mouse styling
+        if(this.onFeatureClick){
+            this.getLayers().forEach(x => {
+                map.on('click', x.id, this.onFeatureClick);
+                
+            });
+            map.on('mouseenter', `${this.id}_fill`, () => map.getCanvas().style.cursor = 'pointer');
+            map.on('mouseleave', `${this.id}_fill`, () => map.getCanvas().style.cursor = '');
+            map.on('mouseenter', `${this.id}_points`, () => map.getCanvas().style.cursor = 'pointer');
+            map.on('mouseleave', `${this.id}_points`, () => map.getCanvas().style.cursor = '');
+        }
 
         this.source = map.getSource(this.sourceId);
 
@@ -256,28 +270,6 @@ class EllipsisVectorLayer {
 
         if(!loading) this.viewPortRefreshed = false;
     };
-
-    selectFeature = async (feature) => {
-        let body = {
-            mapId: this.blockId,
-            layerId: this.layerId,
-            geometryIds: [feature.properties.id],
-            returnType: "all",
-        };
-        try {
-            let result = await EllipsisApi.post(
-                "/geometry/ids",
-                body,
-                this.token
-            );
-            this.selectFeature({
-                size: result.size,
-                feature: result.result.features[0],
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
 }
 
 const getTileId = (tile) => `${tile.zoom}_${tile.tileX}_${tile.tileY}`;
@@ -289,6 +281,7 @@ const styleGeoJson = (geoJson, weight, radius) => {
     const properties = geoJson.properties;
     const color = properties.color;
     const isHexColorFormat = /^#?([A-Fa-f0-9]{2}){3,4}$/.test(color);
+    //TODO add rgb(a) support
 
     if(type === 'MultiPolygon' || type === 'Polygon') {
         //TODO fix mistake in other packages where color length is compared with 10

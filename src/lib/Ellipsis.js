@@ -12,7 +12,7 @@ const Ellipsis = {
     VectorLayer: (blockId, layerId, options = {}) => {
         return new EllipsisVectorLayer(
             blockId, layerId,
-            options.selectFeature,
+            options.onFeatureClick, //TODO update this in documentation
             options.token, 
             options.styleId,
             options.filter,

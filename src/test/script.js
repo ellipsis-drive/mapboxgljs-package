@@ -33,7 +33,10 @@ function init() {
 
         Ellipsis.VectorLayer(
             '1a24a1ee-7f39-4d21-b149-88df5a3b633a',
-            '45c47c8a-035e-429a-9ace-2dff1956e8d9'
+            '45c47c8a-035e-429a-9ace-2dff1956e8d9',
+            { 
+                onFeatureClick: (e) => console.log(e)
+            }
         ).addTo(map);
 
     });
