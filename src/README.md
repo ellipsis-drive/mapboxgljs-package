@@ -1,14 +1,14 @@
-### Import the ellipsis library in leaflet project
+### Import the ellipsis library in mapbox-gl-js project
 
 ```html
-<!-- Import leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Import Mapbox -->
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
 <!-- Import ellipsis library -->
 <script src="adress of library"></script>
 ```
 
-### Add an ellipsis-drive map to leaflet map
+### Add an ellipsis-drive map to mapbox map
 #### Example
 ```js
 const map = L.map('map', {
@@ -77,6 +77,14 @@ Ellipsis.VectorLayer(
 | maxFeaturesPerTile        | The maximum number of features to load per tile. Default 200. |
 | radius | The radius of the points in the layer. Default 15. |
 | lineWidth | The width/weight of the lines in the layer. Default 5. |
+| useMarkers | Use markers instead of points. Default false. |
+| loadAll | Always load all vectors, even if not visible or far away. Default false |
+
+*warning* `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
+
+#### VectorLayer styling
+
+A vectorlayer can add multiple style layers to your mapbox map. To view all added styling, call `yourVectorLayer.getLayers()`. You can also get and use the source that contains geojson with `yourVectorLayer.getSource()`.
 
 ### EllipsisApi functions
 
