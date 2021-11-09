@@ -335,8 +335,6 @@ class EllipsisVectorLayer {
             result[j].result.features.forEach(x => this.styleGeoJson(x, this.lineWidth, this.radius));
             tileData.elements = tileData.elements.concat(result[j].result.features);
     
-            //TODO add onFeatureClick function support
-            //TODO add default layer style with createGeoJsonLayerStyle
         }
         return true;
     };
@@ -369,7 +367,6 @@ class EllipsisVectorLayer {
 
         if(isHexColorFormat && color.length === 9)
             properties.color = color.substring(0,7);
-        //TODO asMarker in other packages is always false?
     }
 
     boundsToTiles = (bounds, zoom) => {
