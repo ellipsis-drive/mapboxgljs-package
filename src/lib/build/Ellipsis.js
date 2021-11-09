@@ -1,4 +1,4 @@
-// Build date: di  9 nov 2021 19:31:30\n
+// Build date: di  9 nov 2021 19:32:53\n
 "use strict"
 const apiUrl = 'https://api.ellipsis-drive.com/v1';
 
@@ -433,8 +433,6 @@ class EllipsisVectorLayer {
             result[j].result.features.forEach(x => this.styleGeoJson(x, this.lineWidth, this.radius));
             tileData.elements = tileData.elements.concat(result[j].result.features);
     
-            //TODO add onFeatureClick function support
-            //TODO add default layer style with createGeoJsonLayerStyle
         }
         return true;
     };
@@ -467,7 +465,6 @@ class EllipsisVectorLayer {
 
         if(isHexColorFormat && color.length === 9)
             properties.color = color.substring(0,7);
-        //TODO asMarker in other packages is always false?
     }
 
     boundsToTiles = (bounds, zoom) => {
