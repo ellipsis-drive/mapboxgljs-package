@@ -176,7 +176,7 @@ class EllipsisVectorLayer {
             features = this.cache;
         } else {
             features = this.tiles.flatMap((t) => {
-                const geoTile = this.cache[getTileId(t)];
+                const geoTile = this.cache[this.getTileId(t)];
                 return geoTile ? geoTile.elements : [];
             });
         }
@@ -268,7 +268,7 @@ class EllipsisVectorLayer {
         const date = Date.now();
         //create tiles parameter which contains tiles that need to load more features
         const tiles = this.tiles.map((t) => {
-            const tileId = getTileId(t);
+            const tileId = this.getTileId(t);
 
             //If not cached, always try to load features.
             if(!this.cache[tileId]) 
@@ -315,7 +315,7 @@ class EllipsisVectorLayer {
         
         //Add newly loaded data to cache
         for (let j = 0; j < tiles.length; j++) {
-            const tileId = getTileId(tiles[j].tileId);
+            const tileId = this.getTileId(tiles[j].tileId);
 
             if (!this.cache[tileId]) {
                 this.cache[tileId] = {
