@@ -16,7 +16,8 @@ class EllipsisVectorLayer {
         maxFeaturesPerTile,
         radius,
         lineWidth,
-        useMarkers
+        useMarkers,
+        loadAll
     ) {
         this.id = `${blockId}_${layerId}`;
         this.sourceId = `${this.id}_source`;
@@ -37,6 +38,7 @@ class EllipsisVectorLayer {
         this.radius = radius;
         this.lineWidth = lineWidth;
         this.useMarkers = useMarkers;
+        this.loadAll = loadAll;
 
         this.tiles = [];
         this.cache = [];
@@ -133,6 +135,8 @@ class EllipsisVectorLayer {
 
         this.handleViewportUpdate();
 
+        if(this.loadAll) return this;
+
         map.on("zoom", (x) => {
             this.handleViewportUpdate();
         });
@@ -144,7 +148,7 @@ class EllipsisVectorLayer {
     }
 
     handleViewportUpdate = () => {
-        const viewport = getMapBounds(this.map);
+        const viewport = getMapBounds(this.map, this.loadAll);
         if (!viewport) return;
         this.zoom = Math.max(Math.min(this.maxZoom, viewport.zoom - 2), 0);
         this.tiles = boundsToTiles(viewport.bounds, this.zoom);
@@ -154,7 +158,7 @@ class EllipsisVectorLayer {
         this.gettingVectorsInterval = setInterval(async () => {
             if(this.isLoading) return;
 
-            const loadedSomething = await this.load();
+            const loadedSomething = await this.loadStep();
             if(!loadedSomething) {
                 clearInterval(this.gettingVectorsInterval);
                 this.gettingVectorsInterval = undefined;
@@ -167,10 +171,15 @@ class EllipsisVectorLayer {
     updateView = () => {
         if (!this.tiles || this.tiles.length === 0) return;
 
-        const features = this.tiles.flatMap((t) => {
-            const geoTile = this.cache[getTileId(t)];
-            return geoTile ? geoTile.elements : [];
-        });
+        let features;
+        if(this.loadAll) {
+            features = this.cache;
+        } else {
+            features = this.tiles.flatMap((t) => {
+                const geoTile = this.cache[getTileId(t)];
+                return geoTile ? geoTile.elements : [];
+            });
+        }
 
         if(this.useMarkers) {
             let points = features.flatMap((x) => {
@@ -197,8 +206,14 @@ class EllipsisVectorLayer {
         });
     };
 
-    load = async () => {
+    loadStep = async () => {
         this.isLoading = true;
+        if(this.loadAll) {
+            const cachedSomething = await this.getAndCacheAllGeoJsons();
+            this.isLoading = false;
+            return cachedSomething;
+        }
+
         this.ensureMaxCacheSize();
         const cachedSomething = await this.getAndCacheGeoJsons();
         this.isLoading = false;
@@ -216,6 +231,37 @@ class EllipsisVectorLayer {
                 }
             });
         }
+    };
+
+    getAndCacheAllGeoJsons = async () => {
+        if(this.nextPageStart === 4)
+            return false;
+        
+        const body = {
+            pageStart: this.nextPageStart,
+            mapId: this.blockId,
+            returnType: this.centerPoints ? "center" : "geometry",
+            layerId: this.layerId,
+            zip: true,
+            pageSize: Math.min(3000, this.pageSize),
+            styleId: this.styleId
+        };
+
+        try {
+            const res = await EllipsisApi.post("/geometry/get", body, this.token);
+            this.nextPageStart = res.nextPageStart;
+            if(!res.nextPageStart) 
+                this.nextPageStart = 4; //EOT
+            if(res.result && res.result.features) {
+                res.result.features.forEach(x => {
+                    styleGeoJson(x, this.lineWidth, this.radius);
+                    this.cache.push(x);
+                });
+            }
+        } catch {
+            return false;
+        }
+        return true;
     }
 
     getAndCacheGeoJsons = async () => {
@@ -370,10 +416,10 @@ const boundsToTiles = (bounds, zoom) => {
 };
 
 const getMapBounds = (map) => {
-    if (!map || !map.transform.zoom) return;
+    if (!map) return;
 
     const screenBounds = map.getBounds();
-
+    const zoom = map.getZoom();
     let bounds = {
         xMin: screenBounds.getWest(),
         xMax: screenBounds.getEast(),
@@ -382,5 +428,5 @@ const getMapBounds = (map) => {
     };
 
     //Mapbox uses 512x512 tiles, and ellipsis uses 256x256 tiles. So increase zoom with 1. 'zoom256 = zoom512 + 1'
-    return { bounds: bounds, zoom: parseInt(map.getZoom() + 1, 10) };
+    return { bounds: bounds, zoom: parseInt(zoom + 1, 10) };
 };

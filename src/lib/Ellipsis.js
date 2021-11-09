@@ -24,7 +24,8 @@ const Ellipsis = {
             options.maxFeaturesPerTile ? options.maxFeaturesPerTile : 200,
             options.radius ? options.radius : 15,
             options.lineWidth ? options.lineWidth : 5,
-            options.useMarkers
+            options.useMarkers ? true : false,
+            options.loadAll ? true : false
         );
     }
 }
