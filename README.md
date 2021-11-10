@@ -8,7 +8,7 @@
 <script src="adress of library"></script>
 ```
 
-### Add an ellipsis-drive map to mapbox map
+### Add an ellipsis-drive map to a mapbox map
 #### Example
 ```js
 const map = L.map('map', {
@@ -86,7 +86,7 @@ Ellipsis.VectorLayer(
 
 A vectorlayer can add multiple style layers to your mapbox map. To view all added styling, call `yourVectorLayer.getLayers()`. You can also get and use the source that contains geojson with `yourVectorLayer.getSource()`.
 
-### Use the EllipsisApi to login into ellipsis-drive
+### Use the EllipsisApi to login into ellipsis-drive or view metadata of maps
 
 #### EllipsisApi.login description
 **parameters**
