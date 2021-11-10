@@ -86,7 +86,7 @@ Ellipsis.VectorLayer(
 
 A vectorlayer can add multiple style layers to your mapbox map. To view all added styling, call `yourVectorLayer.getLayers()`. You can also get and use the source that contains geojson with `yourVectorLayer.getSource()`.
 
-### Use the EllipsisApi to login into ellipsis-drive or view metadata of maps
+### Use the EllipsisApi to login into ellipsis-drive or view metadata of blocks
 
 #### EllipsisApi.login description
 **parameters**
