@@ -1,4 +1,4 @@
-// Build date: di  9 nov 2021 19:32:53\n
+// Build date: do 11 nov 2021 20:28:56\n
 "use strict"
 const apiUrl = 'https://api.ellipsis-drive.com/v1';
 
@@ -274,7 +274,7 @@ class EllipsisVectorLayer {
             features = this.cache;
         } else {
             features = this.tiles.flatMap((t) => {
-                const geoTile = this.cache[getTileId(t)];
+                const geoTile = this.cache[this.getTileId(t)];
                 return geoTile ? geoTile.elements : [];
             });
         }
@@ -346,7 +346,7 @@ class EllipsisVectorLayer {
         };
 
         try {
-            const res = await EllipsisApi.post("/geometry/get", body, this.token);
+            const res = await EllipsisApi.post("/geometry/get", body, {token: this.token});
             this.nextPageStart = res.nextPageStart;
             if(!res.nextPageStart) 
                 this.nextPageStart = 4; //EOT
@@ -366,7 +366,7 @@ class EllipsisVectorLayer {
         const date = Date.now();
         //create tiles parameter which contains tiles that need to load more features
         const tiles = this.tiles.map((t) => {
-            const tileId = getTileId(t);
+            const tileId = this.getTileId(t);
 
             //If not cached, always try to load features.
             if(!this.cache[tileId]) 
@@ -403,8 +403,7 @@ class EllipsisVectorLayer {
         for (let k = 0; k < tiles.length; k += chunkSize) {
             body.tiles = tiles.slice(k, k + chunkSize);
             try {
-                // console.log(body);
-                const res = await EllipsisApi.post("/geometry/tile", body, this.token);
+                const res = await EllipsisApi.post("/geometry/tile", body, {token: this.token});
                 result = result.concat(res);
             } catch {
                 return false;
@@ -413,7 +412,7 @@ class EllipsisVectorLayer {
         
         //Add newly loaded data to cache
         for (let j = 0; j < tiles.length; j++) {
-            const tileId = getTileId(tiles[j].tileId);
+            const tileId = this.getTileId(tiles[j].tileId);
 
             if (!this.cache[tileId]) {
                 this.cache[tileId] = {
