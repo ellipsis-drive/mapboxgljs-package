@@ -42,7 +42,7 @@ Ellipsis.VectorLayer(
 | Name        | Description |
 | ----------- | -----------|
 | blockId        | id of the block|
-| captureId     | id of the timestamp |
+| captureId     | id of the capture |
 | visualizationId     | id of the layer |
 | options | optional options object|
 
