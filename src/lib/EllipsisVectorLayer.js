@@ -248,7 +248,7 @@ class EllipsisVectorLayer {
         };
 
         try {
-            const res = await EllipsisApi.post("/geometry/get", body, this.token);
+            const res = await EllipsisApi.post("/geometry/get", body, {token: this.token});
             this.nextPageStart = res.nextPageStart;
             if(!res.nextPageStart) 
                 this.nextPageStart = 4; //EOT
@@ -305,8 +305,7 @@ class EllipsisVectorLayer {
         for (let k = 0; k < tiles.length; k += chunkSize) {
             body.tiles = tiles.slice(k, k + chunkSize);
             try {
-                // console.log(body);
-                const res = await EllipsisApi.post("/geometry/tile", body, this.token);
+                const res = await EllipsisApi.post("/geometry/tile", body, {token: this.token});
                 result = result.concat(res);
             } catch {
                 return false;
