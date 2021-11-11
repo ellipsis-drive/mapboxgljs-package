@@ -80,17 +80,40 @@ async function ellipsisApiManagerFetch(method, url, body, user) {
 
 const EllipsisApi = {
     apiUrl: apiUrl,
+
+    /**
+     * Send a post request to the ellipsis api.
+     * @param {string} url 
+     * @param {object} body 
+     * @param {{token: string}} user 
+     * @returns 
+     */
     post: (url, body, user) => {
         return ellipsisApiManagerFetch('POST', url, body, user);
     },
+
+    /**
+     * Login into an ellipsis drive account with a username and password
+     * @param {string} username 
+     * @param {string} password 
+     * @returns 
+     */
     login: (username, password) => {
         return ellipsisApiManagerFetch('POST', '/account/login', {username, password});
     },
-    getMetadata: (blockId, includeDeleted) => {
+
+    /**
+     * Get metadata of a specified block.
+     * @param {string} blockId 
+     * @param {boolean} includeDeleted 
+     * @param {{token: string}} user 
+     * @returns 
+     */
+    getMetadata: (blockId, includeDeleted, user) => {
         let body;
         if(includeDeleted) body = {mapId: blockId, includeDeleted};
         else body = {mapId: blockId};
 
-        return ellipsisApiManagerFetch('POST', '/metadata', body);
+        return ellipsisApiManagerFetch('POST', '/metadata', body, user);
     }
 }
