@@ -115,6 +115,7 @@ expires: number //expiration time in milliseconds
 | -- | -- |
 | blockId | The block or shape id of the project. |
 | includeDeleted | (Optional) Boolean whether to also return deleted items. Default false. |
+| user | (Optional) An user object which can contain a token like `user: {token: mytoken}` | 
 
 **return value**
 
