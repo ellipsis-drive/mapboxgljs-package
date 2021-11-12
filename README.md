@@ -27,8 +27,8 @@ Ellipsis.RasterLayer(
     blockId,
     captureId,
     visualizationId, 
+    maxZoom: 25,
     { //options
-        maxZoom: 25,
         token: yourToken
     }
 ).addTo(map)
