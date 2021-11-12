@@ -1,3 +1,6 @@
+### Installing the library
+All releases of this package are listed in the release list on github [here](https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases). To install this library, simply find the latest `.js` file in there, and put it in the directory of your project.
+
 ### Import the ellipsis library in mapbox-gl-js project
 
 ```html
@@ -5,7 +8,10 @@
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
 <!-- Import ellipsis library -->
-<script src="adress of library"></script>
+<script src="path-to-library"></script>
+<!-- Or import from github directly (which is less efficient) 
+<script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.0/Ellipsis-1.0.0.js"></script> 
+-->
 ```
 
 ### Add an ellipsis-drive map to a mapbox map
@@ -44,14 +50,13 @@ Ellipsis.VectorLayer(
 | blockId        | id of the block|
 | captureId     | id of the capture |
 | visualizationId     | id of the layer |
+| maxZoom        | maxZoomlevel of the layer. Default 21.|
 | options | optional options object|
 
 #### RasterLayer options
 | Name | Description |
 | -- | -- |
-| maxZoom        | maxZoomlevel of the layer. Default 25.|
 | token        | token of the user |
-
 
 #### VectorLayer parameters
 
@@ -65,11 +70,11 @@ Ellipsis.VectorLayer(
 
 | Name        | Description | 
 | ----------- | ----------- |
-| selectFeature        | A function to run on feature click, with as argument the clicked feature |
+| onSelectFeature        | A function to run on feature click, with as argument the clicked feature |
 | token        | Token of the user |
 | styleId        | Id of the layer style|
 | filter        | A property filter to use|
-| maxZoom        | maxZoomlevel of the layer. Default 25. |
+| maxZoom        | maxZoomlevel of the layer. Default 21. |
 | centerPoints        | Boolean whether to render only center points. Default false. |
 | pageSize | Size to retreive per step. Default 25, max 3000. |
 | maxMbPerTile        | The maximum mb to load per tile. Default 16mb. |
@@ -81,6 +86,8 @@ Ellipsis.VectorLayer(
 | loadAll | Always load all vectors, even if not visible or far away. Default false |
 
 *warning* `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
+
+*onSelectFeature* gets passed two parameters: the geojson of the clicked feature and the event.
 
 #### VectorLayer styling
 
