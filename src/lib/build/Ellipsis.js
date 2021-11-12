@@ -1,4 +1,4 @@
-// Build date: do 11 nov 2021 20:37:41\n
+// Build date: vr 12 nov 2021 18:32:26\n
 "use strict"
 const apiUrl = 'https://api.ellipsis-drive.com/v1';
 
@@ -243,8 +243,7 @@ class EllipsisVectorLayer {
         //Handle feature clicks and mouse styling
         if(this.onFeatureClick){
             this.getLayers().forEach(x => {
-                map.on('click', x.id, this.onFeatureClick);
-                
+                map.on('click', x.id, (e) => this.onFeatureClick(x, e));
             });
             map.on('mouseenter', `${this.id}_fill`, () => map.getCanvas().style.cursor = 'pointer');
             map.on('mouseleave', `${this.id}_fill`, () => map.getCanvas().style.cursor = '');
@@ -575,12 +574,12 @@ class EllipsisRasterLayer {
 
 
 const Ellipsis = {
-    RasterLayer: (blockId, captureId, visualizationId, options = {}) => {
+    RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
             blockId, 
             captureId, 
             visualizationId, 
-            options.maxZoom ? options.maxZoom : 25, 
+            maxZoom, 
             options.token
         );
     },
@@ -588,7 +587,7 @@ const Ellipsis = {
     VectorLayer: (blockId, layerId, options = {}) => {
         return new EllipsisVectorLayer(
             blockId, layerId,
-            options.onFeatureClick, //TODO update this in documentation
+            options.onFeatureClick,
             options.token, 
             options.styleId,
             options.filter,
