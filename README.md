@@ -27,7 +27,7 @@ Ellipsis.RasterLayer(
     blockId,
     captureId,
     visualizationId, 
-    maxZoom: 25,
+    maxZoom: 21,
     { //options
         token: yourToken
     }
@@ -38,7 +38,7 @@ Ellipsis.VectorLayer(
     blockId,
     layerId, 
     { //options
-        maxZoom: 25,
+        maxZoom: 21,
         token: yourToken
     }
 ).addTo(map)
