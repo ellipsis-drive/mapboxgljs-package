@@ -10,7 +10,7 @@ All releases of this package are listed in the release list on github [here](htt
 <!-- Import ellipsis library -->
 <script src="path-to-library"></script>
 <!-- Or import from github directly (which is less efficient) 
-<script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.0/Ellipsis-1.0.0.js"></script> 
+<script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.1/Ellipsis-Mapboxgljs-1.0.1.js"></script> 
 -->
 ```
 
