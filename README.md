@@ -1,7 +1,4 @@
-### Installing the library
-All releases of this package are listed in the release list on github [here](https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases). To install this library, simply find the latest `.js` file in there, and put it in the directory of your project.
-
-### Import the Ellipsis library in mapbox-gl-js project
+### Import the Ellipsis library in a mapbox-gl-js project
 
 ```html
 <!-- Import Mapbox -->
