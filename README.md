@@ -1,20 +1,18 @@
 ### Installing the library
 All releases of this package are listed in the release list on github [here](https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases). To install this library, simply find the latest `.js` file in there, and put it in the directory of your project.
 
-### Import the ellipsis library in mapbox-gl-js project
+### Import the Ellipsis library in mapbox-gl-js project
 
 ```html
 <!-- Import Mapbox -->
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
-<!-- Import ellipsis library -->
-<script src="path-to-library"></script>
-<!-- Or import from github directly (which is less efficient) 
+<!-- Import the latest version of the ellipsis library -->
 <script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.1/Ellipsis-Mapboxgljs-1.0.1.js"></script> 
 -->
 ```
 
-### Add an ellipsis-drive map to a mapbox map
+### Add an Ellipsis Drive block to a mapbox map
 #### Example
 ```js
 const map = L.map('map', {
@@ -28,7 +26,8 @@ Ellipsis.RasterLayer(
     captureId,
     visualizationId, 
     maxZoom: 21,
-    { //options
+    { 
+	//options
         token: yourToken
     }
 ).addTo(map)
@@ -37,7 +36,8 @@ Ellipsis.RasterLayer(
 Ellipsis.VectorLayer(
     blockId,
     layerId, 
-    { //options
+    { 
+	//options
         maxZoom: 21,
         token: yourToken
     }
@@ -93,7 +93,7 @@ Ellipsis.VectorLayer(
 
 A vectorlayer can add multiple style layers to your mapbox map. To view all added styling, call `yourVectorLayer.getLayers()`. You can also get and use the source that contains geojson with `yourVectorLayer.getSource()`.
 
-### Use the EllipsisApi to login into ellipsis-drive or view metadata of blocks
+### Use the EllipsisApi to login into Ellipsis Drive or view metadata of blocks
 
 #### EllipsisApi.login description
 **parameters**
