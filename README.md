@@ -8,8 +8,7 @@ All releases of this package are listed in the release list on github [here](htt
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
 <!-- Import the latest version of the ellipsis library -->
-<script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.1/Ellipsis-Mapboxgljs-1.0.1.js"></script> 
--->
+<script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.1/Ellipsis-Mapboxgljs-1.0.1.js"></script> W
 ```
 
 ### Add an Ellipsis Drive block to a mapbox map
