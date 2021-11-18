@@ -1,20 +1,14 @@
-### Installing the library
-All releases of this package are listed in the release list on github [here](https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases). To install this library, simply find the latest `.js` file in there, and put it in the directory of your project.
-
-### Import the ellipsis library in mapbox-gl-js project
+### Import the Ellipsis library in a mapbox-gl-js project
 
 ```html
 <!-- Import Mapbox -->
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
-<!-- Import ellipsis library -->
-<script src="path-to-library"></script>
-<!-- Or import from github directly (which is less efficient) 
-<script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.0/Ellipsis-1.0.0.js"></script> 
--->
+<!-- Import the latest version of the ellipsis library -->
+<script src="https://github.com/ellipsis-drive-internal/mapboxgljs-package/releases/download/1.0.1/Ellipsis-Mapboxgljs-1.0.1.js"></script>
 ```
 
-### Add an ellipsis-drive map to a mapbox map
+### Add an Ellipsis Drive block to a mapbox map
 #### Example
 ```js
 const map = L.map('map', {
@@ -27,8 +21,9 @@ Ellipsis.RasterLayer(
     blockId,
     captureId,
     visualizationId, 
-    { //options
-        maxZoom: 25,
+    maxZoom: 21,
+    { 
+	//options
         token: yourToken
     }
 ).addTo(map)
@@ -37,8 +32,9 @@ Ellipsis.RasterLayer(
 Ellipsis.VectorLayer(
     blockId,
     layerId, 
-    { //options
-        maxZoom: 25,
+    { 
+	//options
+        maxZoom: 21,
         token: yourToken
     }
 ).addTo(map)
@@ -70,7 +66,7 @@ Ellipsis.VectorLayer(
 
 | Name        | Description | 
 | ----------- | ----------- |
-| onSelectFeature        | A function to run on feature click, with as argument the clicked feature |
+| onFeatureClick        | A function to run on feature click, with as argument the clicked feature |
 | token        | Token of the user |
 | styleId        | Id of the layer style|
 | filter        | A property filter to use|
@@ -87,13 +83,13 @@ Ellipsis.VectorLayer(
 
 *warning* `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
 
-*onSelectFeature* gets passed two parameters: the geojson of the clicked feature and the event.
+*onFeatureClick* gets passed two parameters: the geojson of the clicked feature and the event.
 
 #### VectorLayer styling
 
 A vectorlayer can add multiple style layers to your mapbox map. To view all added styling, call `yourVectorLayer.getLayers()`. You can also get and use the source that contains geojson with `yourVectorLayer.getSource()`.
 
-### Use the EllipsisApi to login into ellipsis-drive or view metadata of blocks
+### Use the EllipsisApi to login into Ellipsis Drive or view metadata of blocks
 
 #### EllipsisApi.login description
 **parameters**
@@ -115,6 +111,7 @@ expires: number //expiration time in milliseconds
 | -- | -- |
 | blockId | The block or shape id of the project. |
 | includeDeleted | (Optional) Boolean whether to also return deleted items. Default false. |
+| user | (Optional) An user object which can contain a token like `user: {token: mytoken}` | 
 
 **return value**
 
