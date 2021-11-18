@@ -66,7 +66,7 @@ Ellipsis.VectorLayer(
 
 | Name        | Description | 
 | ----------- | ----------- |
-| onSelectFeature        | A function to run on feature click, with as argument the clicked feature |
+| onFeatureClick        | A function to run on feature click, with as argument the clicked feature |
 | token        | Token of the user |
 | styleId        | Id of the layer style|
 | filter        | A property filter to use|
@@ -83,7 +83,7 @@ Ellipsis.VectorLayer(
 
 *warning* `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
 
-*onSelectFeature* gets passed two parameters: the geojson of the clicked feature and the event.
+*onFeatureClick* gets passed two parameters: the geojson of the clicked feature and the event.
 
 #### VectorLayer styling
 
