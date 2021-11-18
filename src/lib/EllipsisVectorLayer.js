@@ -122,7 +122,7 @@ class EllipsisVectorLayer {
         //Handle feature clicks and mouse styling
         if(this.onFeatureClick){
             this.getLayers().forEach(x => {
-                map.on('click', x.id, (e) => this.onFeatureClick(x, e));
+                map.on('click', x.id, (e) => this.onFeatureClick({geometry: e.features[0].geometry, properties: e.features[0].properties}, x));
             });
             map.on('mouseenter', `${this.id}_fill`, () => map.getCanvas().style.cursor = 'pointer');
             map.on('mouseleave', `${this.id}_fill`, () => map.getCanvas().style.cursor = '');
