@@ -58,8 +58,8 @@ class EllipsisVectorLayer {
      * @returns mapbox layer
      */
     getLayers() {
-        if(!this.map) return [];
-        if(!this.map.getStyle() || !this.map.getStyle().layers) return [];
+        if (!this.map) return [];
+        if (!this.map.getStyle() || !this.map.getStyle().layers) return [];
         return this.map.getStyle().layers.filter(x => x.id.startsWith(this.id));
     }
 
@@ -103,7 +103,7 @@ class EllipsisVectorLayer {
             ]
         });
 
-        if(!this.useMarkers)
+        if (!this.useMarkers)
             map.addLayer({
                 id: `${this.id}_points`,
                 type: 'circle',
@@ -120,9 +120,9 @@ class EllipsisVectorLayer {
             });
 
         //Handle feature clicks and mouse styling
-        if(this.onFeatureClick){
+        if (this.onFeatureClick) {
             this.getLayers().forEach(x => {
-                map.on('click', x.id, (e) => this.onFeatureClick({geometry: e.features[0].geometry, properties: e.features[0].properties}, x));
+                map.on('click', x.id, (e) => this.onFeatureClick({ geometry: e.features[0].geometry, properties: e.features[0].properties }, x));
             });
             map.on('mouseenter', `${this.id}_fill`, () => map.getCanvas().style.cursor = 'pointer');
             map.on('mouseleave', `${this.id}_fill`, () => map.getCanvas().style.cursor = '');
@@ -134,7 +134,7 @@ class EllipsisVectorLayer {
 
         this.handleViewportUpdate();
 
-        if(this.loadAll) return this;
+        if (this.loadAll) return this;
 
         map.on("zoom", (x) => {
             this.handleViewportUpdate();
@@ -152,13 +152,13 @@ class EllipsisVectorLayer {
         this.zoom = Math.max(Math.min(this.maxZoom, viewport.zoom - 2), 0);
         this.tiles = this.boundsToTiles(viewport.bounds, this.zoom);
 
-        if(this.gettingVectorsInterval) return;
+        if (this.gettingVectorsInterval) return;
 
         this.gettingVectorsInterval = setInterval(async () => {
-            if(this.isLoading) return;
+            if (this.isLoading) return;
 
             const loadedSomething = await this.loadStep();
-            if(!loadedSomething) {
+            if (!loadedSomething) {
                 clearInterval(this.gettingVectorsInterval);
                 this.gettingVectorsInterval = undefined;
                 return;
@@ -171,7 +171,7 @@ class EllipsisVectorLayer {
         if (!this.tiles || this.tiles.length === 0) return;
 
         let features;
-        if(this.loadAll) {
+        if (this.loadAll) {
             features = this.cache;
         } else {
             features = this.tiles.flatMap((t) => {
@@ -180,18 +180,18 @@ class EllipsisVectorLayer {
             });
         }
 
-        if(this.useMarkers) {
+        if (this.useMarkers) {
             let points = features.flatMap((x) => {
-                if(x.geometry.type === 'Point') {
-                    return new mapboxgl.Marker({color: x.properties.color}).setLngLat(x.geometry.coordinates);
-                } else if(x.geometry.type === 'MultiPoint') {
-                    return x.geometry.coordinates.map(c => new mapboxgl.Marker({color: x.properties.color}).setLngLat(c));
+                if (x.geometry.type === 'Point') {
+                    return new mapboxgl.Marker({ color: x.properties.color }).setLngLat(x.geometry.coordinates);
+                } else if (x.geometry.type === 'MultiPoint') {
+                    return x.geometry.coordinates.map(c => new mapboxgl.Marker({ color: x.properties.color }).setLngLat(c));
                 }
                 return [];
             });
             this.markers.forEach(x => x.remove());
             points.forEach(x => {
-                if(this.onFeatureClick){
+                if (this.onFeatureClick) {
                     x.getElement().addEventListener('click', this.onFeatureClick);
                 }
                 x.addTo(this.map);
@@ -207,7 +207,7 @@ class EllipsisVectorLayer {
 
     loadStep = async () => {
         this.isLoading = true;
-        if(this.loadAll) {
+        if (this.loadAll) {
             const cachedSomething = await this.getAndCacheAllGeoJsons();
             this.isLoading = false;
             return cachedSomething;
@@ -233,9 +233,9 @@ class EllipsisVectorLayer {
     };
 
     getAndCacheAllGeoJsons = async () => {
-        if(this.nextPageStart === 4)
+        if (this.nextPageStart === 4)
             return false;
-        
+
         const body = {
             pageStart: this.nextPageStart,
             mapId: this.blockId,
@@ -247,11 +247,11 @@ class EllipsisVectorLayer {
         };
 
         try {
-            const res = await EllipsisApi.post("/geometry/get", body, {token: this.token});
+            const res = await EllipsisApi.post("/geometry/get", body, { token: this.token });
             this.nextPageStart = res.nextPageStart;
-            if(!res.nextPageStart) 
+            if (!res.nextPageStart)
                 this.nextPageStart = 4; //EOT
-            if(res.result && res.result.features) {
+            if (res.result && res.result.features) {
                 res.result.features.forEach(x => {
                     this.styleGeoJson(x, this.lineWidth, this.radius);
                     this.cache.push(x);
@@ -270,23 +270,23 @@ class EllipsisVectorLayer {
             const tileId = this.getTileId(t);
 
             //If not cached, always try to load features.
-            if(!this.cache[tileId]) 
-                return { tileId: t}
+            if (!this.cache[tileId])
+                return { tileId: t }
 
             const pageStart = this.cache[tileId].nextPageStart;
 
             //TODO in other packages we use < instead of <=
             //Check if tile is not already fully loaded, and if more features may be loaded
-            if(pageStart && this.cache[tileId].amount <= this.maxFeaturesPerTile && this.cache[tileId].size <= this.maxMbPerTile)
+            if (pageStart && this.cache[tileId].amount <= this.maxFeaturesPerTile && this.cache[tileId].size <= this.maxMbPerTile)
                 return { tileId: t, pageStart }
 
             return null;
         }).filter(x => x);
-        
+
         // console.log("tiles:");
         // console.log(tiles);
 
-        if(tiles.length === 0) return false;
+        if (tiles.length === 0) return false;
 
         const body = {
             mapId: this.blockId,
@@ -297,20 +297,20 @@ class EllipsisVectorLayer {
             styleId: this.styleId,
             propertyFilter: (this.filter && this.filter > 0) ? this.filter : null,
         };
-    
+
         //Get new geometry for the tiles
         let result = [];
         const chunkSize = 10;
         for (let k = 0; k < tiles.length; k += chunkSize) {
             body.tiles = tiles.slice(k, k + chunkSize);
             try {
-                const res = await EllipsisApi.post("/geometry/tile", body, {token: this.token});
+                const res = await EllipsisApi.post("/geometry/tile", body, { token: this.token });
                 result = result.concat(res);
             } catch {
                 return false;
             }
         }
-        
+
         //Add newly loaded data to cache
         for (let j = 0; j < tiles.length; j++) {
             const tileId = this.getTileId(tiles[j].tileId);
@@ -323,7 +323,7 @@ class EllipsisVectorLayer {
                     nextPageStart: null,
                 };
             }
-    
+
             //set tile info for tile in this.
             const tileData = this.cache[tileId];
             tileData.date = date;
@@ -332,7 +332,7 @@ class EllipsisVectorLayer {
             tileData.nextPageStart = result[j].nextPageStart;
             result[j].result.features.forEach(x => this.styleGeoJson(x, this.lineWidth, this.radius));
             tileData.elements = tileData.elements.concat(result[j].result.features);
-    
+
         }
         return true;
     };
@@ -340,31 +340,29 @@ class EllipsisVectorLayer {
     getTileId = (tile) => `${tile.zoom}_${tile.tileX}_${tile.tileY}`;
 
     styleGeoJson = (geoJson, weight, radius) => {
-        if(!geoJson || !geoJson.geometry || !geoJson.geometry.type || !geoJson.properties) return;
+        if (!geoJson || !geoJson.geometry || !geoJson.geometry.type || !geoJson.properties) return;
 
         const type = geoJson.geometry.type;
         const properties = geoJson.properties;
         const color = properties.color;
         const isHexColorFormat = /^#?([A-Fa-f0-9]{2}){3,4}$/.test(color);
-        //TODO add rgb(a) support
 
-        if(type === 'MultiPolygon' || type === 'Polygon') {
-            //TODO fix mistake in other packages where color length is compared with 10
-            if(isHexColorFormat && color.length === 9)
-                properties.fillOpacity = parseInt(color.substring(8,10), 16) / 25.5;
-            else properties.fillOpacity = 0.6;
-            properties.weight = weight;
+        //Parse color and opacity
+        if (isHexColorFormat && color.length === 9) {
+            properties.fillOpacity = parseInt(color.substring(8, 10), 16) / 25.5;
+            properties.color = color.substring(0, 7);
         }
-        //TODO: weight default on 8 for LineString and MultiLineString?
+        else {
+            properties.fillOpacity = 0.6;
+            properties.color = color;
+        }
 
-        else if(type === 'Point' || type === 'MultiPoint') {
-            //TODO: weight default on 8 for LineString and MultiLineString?
+        //Parse line width
+        if (type.endsWith('Point')) {
             properties.radius = radius;
             properties.weight = 2;
         }
-
-        if(isHexColorFormat && color.length === 9)
-            properties.color = color.substring(0,7);
+        else properties.weight = weight;
     }
 
     boundsToTiles = (bounds, zoom) => {
@@ -383,11 +381,11 @@ class EllipsisVectorLayer {
         const tileXMax = Math.floor((xMax + 180) * comp1);
         const tileYMin = Math.floor(
             (zoomComp / comp2) *
-                (pi - Math.log(Math.tan(comp3 + (yMax / 360) * pi)))
+            (pi - Math.log(Math.tan(comp3 + (yMax / 360) * pi)))
         );
         const tileYMax = Math.floor(
             (zoomComp / comp2) *
-                (pi - Math.log(Math.tan(comp3 + (yMin / 360) * pi)))
+            (pi - Math.log(Math.tan(comp3 + (yMin / 360) * pi)))
         );
 
         let tiles = [];
@@ -422,5 +420,5 @@ class EllipsisVectorLayer {
         //Mapbox uses 512x512 tiles, and ellipsis uses 256x256 tiles. So increase zoom with 1. 'zoom256 = zoom512 + 1'
         return { bounds: bounds, zoom: parseInt(zoom + 1, 10) };
     };
-    
+
 }
