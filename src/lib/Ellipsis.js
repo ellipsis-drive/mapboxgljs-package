@@ -1,4 +1,4 @@
-const ellipsis = {
+const Ellipsis = {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
             blockId, 
