@@ -1,4 +1,4 @@
-// Build date: Tue Nov 23 16:00:18 CET 2021
+// Build date: lun. 29 nov. 2021 17:20:02 CET
 
 "use strict"
 const apiUrl = 'https://api.ellipsis-drive.com/v1';
@@ -572,7 +572,7 @@ class EllipsisRasterLayer {
 }
 
 
-const Ellipsis = {
+const ellipsis = {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
             blockId, 
