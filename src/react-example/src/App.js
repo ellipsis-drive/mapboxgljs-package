@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 
 const mapboxgl = window.mapboxgl;
-const Ellipsis = window.Ellipsis;
+const ellipsis = window.ellipsis;
 
 function init() {
   mapboxgl.accessToken =
@@ -36,25 +36,29 @@ function init() {
     //     '564b79df-6839-4efd-a219-e08883e65f95'
     // ).addTo(map);
 
-    Ellipsis.VectorLayer(
-      "1a24a1ee-7f39-4d21-b149-88df5a3b633a",
-      "45c47c8a-035e-429a-9ace-2dff1956e8d9",
-      {
-        onFeatureClick: (x) => console.log(x),
-        loadAll: true,
-      }
-    ).addTo(map);
+    ellipsis
+      .VectorLayer(
+        "1a24a1ee-7f39-4d21-b149-88df5a3b633a",
+        "45c47c8a-035e-429a-9ace-2dff1956e8d9",
+        {
+          onFeatureClick: (x) => console.log(x),
+          loadAll: true,
+        }
+      )
+      .addTo(map);
 
-    Ellipsis.VectorLayer(
-      "b8468235-31b5-4959-91a4-0e52a1d4feb6",
-      "44be2542-d20d-457b-b003-698d048d2c6c",
-      {
-        // useMarkers: true,
-        onFeatureClick: (x) => console.log(x),
-        radius: 3,
-        loadAll: false,
-      }
-    ).addTo(map);
+    ellipsis
+      .VectorLayer(
+        "b8468235-31b5-4959-91a4-0e52a1d4feb6",
+        "44be2542-d20d-457b-b003-698d048d2c6c",
+        {
+          // useMarkers: true,
+          onFeatureClick: (x) => console.log(x),
+          radius: 3,
+          loadAll: false,
+        }
+      )
+      .addTo(map);
   });
 }
 
