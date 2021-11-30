@@ -24,3 +24,4 @@ class EllipsisRasterLayer {
     }
 }
 
+window.EllipsisRasterLayer = EllipsisRasterLayer;

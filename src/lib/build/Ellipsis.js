@@ -1,4 +1,4 @@
-// Build date: vr 12 nov 2021 18:32:26\n
+// Build date: di 30 nov 2021 19:48:21\n
 "use strict"
 const apiUrl = 'https://api.ellipsis-drive.com/v1';
 
@@ -80,7 +80,7 @@ async function ellipsisApiManagerFetch(method, url, body, user) {
 }
 
 
-const EllipsisApi = {
+window.EllipsisApi = {
     apiUrl: apiUrl,
 
     /**
@@ -243,7 +243,7 @@ class EllipsisVectorLayer {
         //Handle feature clicks and mouse styling
         if(this.onFeatureClick){
             this.getLayers().forEach(x => {
-                map.on('click', x.id, (e) => this.onFeatureClick(x, e));
+                map.on('click', x.id, (e) => this.onFeatureClick({geometry: e.features[0].geometry, properties: e.features[0].properties}, x));
             });
             map.on('mouseenter', `${this.id}_fill`, () => map.getCanvas().style.cursor = 'pointer');
             map.on('mouseleave', `${this.id}_fill`, () => map.getCanvas().style.cursor = '');
@@ -546,6 +546,7 @@ class EllipsisVectorLayer {
     
 }
 
+window.EllipsisVectorLayer = EllipsisVectorLayer;
 class EllipsisRasterLayer {
 
     constructor(blockId, captureId, visualizationId, maxZoom = 18, token) {
@@ -572,8 +573,9 @@ class EllipsisRasterLayer {
     }
 }
 
+window.EllipsisRasterLayer = EllipsisRasterLayer;
 
-const Ellipsis = {
+window.Ellipsis = {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
             blockId, 

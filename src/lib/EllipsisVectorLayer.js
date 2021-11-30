@@ -424,3 +424,5 @@ class EllipsisVectorLayer {
     };
     
 }
+
+window.EllipsisVectorLayer = EllipsisVectorLayer;
