@@ -62,6 +62,7 @@ function App() {
   React.useEffect(() => {
     init();
   }, []);
+
   return (
     <div className="App">
       <h1>Test for Ellipsis Drive MapboxGL.js Package</h1>
