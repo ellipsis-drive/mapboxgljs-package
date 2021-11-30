@@ -78,7 +78,7 @@ async function ellipsisApiManagerFetch(method, url, body, user) {
 }
 
 
-const EllipsisApi = {
+window.EllipsisApi = {
     apiUrl: apiUrl,
 
     /**
