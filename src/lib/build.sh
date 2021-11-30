@@ -1,20 +1,19 @@
-#!/bin/sh
+rm -r ./build;
+mkdir ./build;
+now=$(date);
+buildfile="./build/Ellipsis.js";\
 
-mkdir ./build
+echo "// Build date: $now" > "$buildfile";
+echo '' >> "$buildfile";
+echo '"use strict"' >> "$buildfile";
 
-now=$(date)
-buildfile="./build/Ellipsis.js"
+cat EllipsisApi.js >> "$buildfile";
+echo '' >> "$buildfile";
 
-echo "// Build date: $now\n" > "$buildfile"
-echo '"use strict"' >> "$buildfile"
+cat EllipsisVectorLayer.js >> "$buildfile";
+echo '' >> "$buildfile";
 
-cat EllipsisApi.js >> "$buildfile"
-echo '' >> "$buildfile"
+cat EllipsisRasterLayer.js >> "$buildfile";
+echo '' >> "$buildfile";
 
-cat EllipsisVectorLayer.js >> "$buildfile"
-echo '' >> "$buildfile"
-
-cat EllipsisRasterLayer.js >> "$buildfile"
-echo '' >> "$buildfile"
-
-cat Ellipsis.js >> "$buildfile"
+cat Ellipsis.js >> "$buildfile";
