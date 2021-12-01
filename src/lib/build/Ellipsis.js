@@ -1,4 +1,4 @@
-// Build date: Tue Nov 23 16:00:18 CET 2021
+// Build date: di 30 nov 2021 19:54:15
 
 "use strict"
 const apiUrl = 'https://api.ellipsis-drive.com/v1';
@@ -81,7 +81,7 @@ async function ellipsisApiManagerFetch(method, url, body, user) {
 }
 
 
-const EllipsisApi = {
+window.EllipsisApi = {
     apiUrl: apiUrl,
 
     /**
@@ -545,6 +545,7 @@ class EllipsisVectorLayer {
 
 }
 
+window.EllipsisVectorLayer = EllipsisVectorLayer;
 class EllipsisRasterLayer {
 
     constructor(blockId, captureId, visualizationId, maxZoom = 18, token) {
@@ -571,8 +572,9 @@ class EllipsisRasterLayer {
     }
 }
 
+window.EllipsisRasterLayer = EllipsisRasterLayer;
 
-const Ellipsis = {
+window.Ellipsis = {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
             blockId, 
