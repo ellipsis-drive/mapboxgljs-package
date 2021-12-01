@@ -1,4 +1,4 @@
-// Build date: di 30 nov 2021 19:54:15
+// Build date: Wed Dec  1 17:05:24 CET 2021
 
 "use strict"
 const apiUrl = 'https://api.ellipsis-drive.com/v1';
@@ -129,6 +129,7 @@ class EllipsisVectorLayer {
         onFeatureClick,
         token,
         styleId,
+        style,
         filter,
         centerPoints,
         maxZoom,
@@ -151,6 +152,7 @@ class EllipsisVectorLayer {
         this.onFeatureClick = onFeatureClick;
         this.token = token;
         this.styleId = styleId;
+        this.style = style;
         this.filter = filter;
         this.centerPoints = centerPoints;
         this.pageSize = Math.min(pageSize, 3000);
@@ -365,7 +367,8 @@ class EllipsisVectorLayer {
             layerId: this.layerId,
             zip: true,
             pageSize: Math.min(3000, this.pageSize),
-            styleId: this.styleId
+            styleId: this.styleId,
+            style: this.style
         };
 
         try {
@@ -417,6 +420,7 @@ class EllipsisVectorLayer {
             zip: true,
             pageSize: Math.min(3000, this.pageSize),
             styleId: this.styleId,
+            style: this.style,
             propertyFilter: (this.filter && this.filter > 0) ? this.filter : null,
         };
 
@@ -577,10 +581,10 @@ window.EllipsisRasterLayer = EllipsisRasterLayer;
 window.Ellipsis = {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
-            blockId, 
-            captureId, 
-            visualizationId, 
-            maxZoom, 
+            blockId,
+            captureId,
+            visualizationId,
+            maxZoom,
             options.token
         );
     },
@@ -589,8 +593,9 @@ window.Ellipsis = {
         return new EllipsisVectorLayer(
             blockId, layerId,
             options.onFeatureClick,
-            options.token, 
+            options.token,
             options.styleId,
+            options.style,
             options.filter,
             options.centerPoints ? true : false,
             options.maxZoom ? options.maxZoom : 21,
