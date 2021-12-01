@@ -1,10 +1,10 @@
 const Ellipsis = {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
-            blockId, 
-            captureId, 
-            visualizationId, 
-            maxZoom, 
+            blockId,
+            captureId,
+            visualizationId,
+            maxZoom,
             options.token
         );
     },
@@ -13,8 +13,9 @@ const Ellipsis = {
         return new EllipsisVectorLayer(
             blockId, layerId,
             options.onFeatureClick,
-            options.token, 
+            options.token,
             options.styleId,
+            options.style,
             options.filter,
             options.centerPoints ? true : false,
             options.maxZoom ? options.maxZoom : 21,

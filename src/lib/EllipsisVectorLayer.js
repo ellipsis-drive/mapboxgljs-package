@@ -7,6 +7,7 @@ class EllipsisVectorLayer {
         onFeatureClick,
         token,
         styleId,
+        style,
         filter,
         centerPoints,
         maxZoom,
@@ -29,6 +30,7 @@ class EllipsisVectorLayer {
         this.onFeatureClick = onFeatureClick;
         this.token = token;
         this.styleId = styleId;
+        this.style = style;
         this.filter = filter;
         this.centerPoints = centerPoints;
         this.pageSize = Math.min(pageSize, 3000);
@@ -243,7 +245,8 @@ class EllipsisVectorLayer {
             layerId: this.layerId,
             zip: true,
             pageSize: Math.min(3000, this.pageSize),
-            styleId: this.styleId
+            styleId: this.styleId,
+            style: this.style
         };
 
         try {
@@ -295,6 +298,7 @@ class EllipsisVectorLayer {
             zip: true,
             pageSize: Math.min(3000, this.pageSize),
             styleId: this.styleId,
+            style: this.style,
             propertyFilter: (this.filter && this.filter > 0) ? this.filter : null,
         };
 
