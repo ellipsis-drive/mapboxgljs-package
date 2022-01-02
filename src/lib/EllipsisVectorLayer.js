@@ -1,6 +1,7 @@
 import { EllipsisVectorLayerBase } from 'ellipsis-js-util';
 
 class EllipsisVectorLayer {
+
     constructor(options = {}) {
         this.ellipsisLayer = new EllipsisVectorLayerBase({
             ...options,
@@ -28,6 +29,11 @@ class EllipsisVectorLayer {
         return this.map.getStyle().layers.filter(x => x.id.startsWith(this.ellipsisLayer.id));
     }
 
+    /**
+     * Add the ellipsisvectorlayer to the map. This'll create all layers and add all hooks necessary.
+     * @param {mapboxgl.Map} map
+     * @returns {this} a reference to this layer
+     */
     addTo(map) {
         this.map = map;
 
@@ -111,6 +117,7 @@ class EllipsisVectorLayer {
         return this;
     }
 
+    //Render all features that are cached in ellipsisLayer to the screen. 
     updateView = () => {
         const features = this.ellipsisLayer.getFeatures();
         if (!features || !features.length) return;
@@ -139,6 +146,7 @@ class EllipsisVectorLayer {
         });
     };
 
+    //Formats feature so that it can be used by mapboxgljs
     formatFeature = (feature) => {
         if (!feature || !feature.geometry || !feature.geometry.type || !feature.properties)
             return;
@@ -164,6 +172,7 @@ class EllipsisVectorLayer {
             properties.radius = this.ellipsisLayer.radius;
     }
 
+    //Get the map bounds from the map.
     getMapBounds = () => {
         if (!this.map) return;
 
