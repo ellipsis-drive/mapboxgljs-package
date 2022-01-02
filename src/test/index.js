@@ -1,4 +1,4 @@
-import { EllipsisVectorLayer } from '../lib';
+import { EllipsisVectorLayer, EllipsisRasterLayer } from '../lib';
 import token from './token';
 
 mapboxgl.accessToken = token;
@@ -21,25 +21,20 @@ map.on("load", () => {
         type: "raster",
     });
 
-    // Ellipsis.RasterLayer(
-    //     "01104b4f-85a7-482c-9ada-11dbce171982",
-    //     0,
-    //     "01f63a0d-3f92-42d3-925d-b3bfaf6dd6a1"
-    // ).addTo(map);
-    // Ellipsis.VectorLayer(
-    //     '9649385a-70e5-455a-8013-eb3c052525f4',
-    //     '564b79df-6839-4efd-a219-e08883e65f95'
-    // ).addTo(map);
+    const rotterdam = new EllipsisRasterLayer({
+        blockId: '02da544b-1f11-4be4-9d4f-d549433893b7',
+        captureId: '83f0fa0e-ed9b-4357-a7c6-970da5f2fc89',
+        visualizationId: 'f44896e2-ae65-48bc-8fb4-1fd6436d879b',
+    }).addTo(map);
+
     const borders = new EllipsisVectorLayer({
         blockId: '1a24a1ee-7f39-4d21-b149-88df5a3b633a',
         layerId: '45c47c8a-035e-429a-9ace-2dff1956e8d9',
         onFeatureClick: (x) => console.log(x),
         loadAll: true
-    });
-    console.log(borders);
-    borders.addTo(map);
+    }).addTo(map);
 
-    new EllipsisVectorLayer({
+    const pointCloud = new EllipsisVectorLayer({
         blockId: 'b8468235-31b5-4959-91a4-0e52a1d4feb6',
         layerId: '44be2542-d20d-457b-b003-698d048d2c6c',
         // useMarkers: true,
@@ -48,20 +43,3 @@ map.on("load", () => {
         loadAll: false,
     }).addTo(map);
 });
-
-    // // Raster layer
-    // Ellipsis.RasterLayer(
-    //     '01104b4f-85a7-482c-9ada-11dbce171982',
-    //     0,
-    //     '01f63a0d-3f92-42d3-925d-b3bfaf6dd6a1'
-    // ).addTo(map)
-
-
-
-    // Vector layer
-    // Ellipsis.VectorLayer(
-    //     blockId,
-    //     layerId,
-    //     maxZoom,
-    //     token
-    // ).addTo(map)

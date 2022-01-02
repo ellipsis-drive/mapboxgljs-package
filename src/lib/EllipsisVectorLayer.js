@@ -1,14 +1,12 @@
-import { EllipsisVectorLayerBase } from 'ellipsis-js-util';
+import { EllipsisVectorLayerBase, GeoJsonUtil } from 'ellipsis-js-util';
 
 class EllipsisVectorLayer {
 
     constructor(options = {}) {
-        this.ellipsisLayer = new EllipsisVectorLayerBase({
-            ...options,
-            updateView: this.updateView,
-            getMapBounds: this.getMapBounds,
-            featureFormatter: this.formatFeature
-        });
+        this.ellipsisLayer = new EllipsisVectorLayerBase(options);
+        this.ellipsisLayer.updateView = this.updateView;
+        this.ellipsisLayer.getMapBounds = this.getMapBounds;
+        this.ellipsisLayer.featureFormatter = this.formatFeature;
 
         this.sourceId = `${this.ellipsisLayer.id}_source`;
     }
@@ -152,20 +150,10 @@ class EllipsisVectorLayer {
             return;
 
         const properties = feature.properties;
-        const color = properties.color;
+        const parsedColor = GeoJsonUtil.parseColor(properties.color);
 
-        let hex = '000000', alpha = 0.5;
-        if (color) {
-            const splitHexComponents = /^#?([a-f\d]{6})([a-f\d]{2})?$/i.exec(color);
-            if (splitHexComponents.length >= 2) {
-                hex = splitHexComponents[1];
-                alpha = parseInt(splitHexComponents[2], 16) / 255;
-                if (isNaN(alpha)) alpha = 0.5;
-            }
-        }
-
-        properties.fillOpacity = alpha;
-        properties.color = `#${hex}`;
+        properties.fillOpacity = parsedColor.alpha;
+        properties.color = `#${parsedColor.hex}`;
         properties.weight = this.ellipsisLayer.lineWidth;
 
         if (feature.geometry.type.endsWith('Point'))

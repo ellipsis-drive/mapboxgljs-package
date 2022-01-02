@@ -1,15 +1,12 @@
-import EllipsisApi from "./EllipsisApi";
+import { RasterLayerUtil } from 'ellipsis-js-util';
 
 class EllipsisRasterLayer {
 
-    constructor(blockId, captureId, visualizationId, maxZoom = 18, token) {
-        this.id = `${blockId}_${captureId}_${visualizationId}`;
+    constructor(options = {}) {
+        this.url = RasterLayerUtil.getSlippyMapUrl(options);
+        this.id = `${options.blockId}_${options.captureId}_${options.visualizationId}`;
         this.source = `${this.id}_source`;
         this.type = 'raster';
-        this.url = `${EllipsisApi.apiUrl}/tileService/${blockId}/${captureId}/${visualizationId}/{z}/{x}/{y}`;
-        if (token) {
-            url += '?token=' + token;
-        }
     }
 
     addTo(map) {
