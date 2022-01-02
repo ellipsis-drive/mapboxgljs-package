@@ -1,4 +1,9 @@
-window.Ellipsis = {
+import EllipsisVectorLayer from "./EllipsisVectorLayer";
+import EllipsisRasterLayer from "./EllipsisRasterLayer";
+import EllipsisApi from "./EllipsisApi";
+
+export default {
+    EllipsisApi,
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer(
             blockId,
@@ -24,7 +29,7 @@ window.Ellipsis = {
             options.maxTilesInCache ? options.maxTilesInCache : 500,
             options.maxFeaturesPerTile ? options.maxFeaturesPerTile : 200,
             options.radius ? options.radius : 15,
-            options.lineWidth ? options.lineWidth : 5,
+            options.lineWidth ? options.lineWidth : 2,
             options.useMarkers ? true : false,
             options.loadAll ? true : false
         );

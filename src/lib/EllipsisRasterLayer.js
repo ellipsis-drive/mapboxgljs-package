@@ -1,3 +1,5 @@
+import EllipsisApi from "./EllipsisApi";
+
 class EllipsisRasterLayer {
 
     constructor(blockId, captureId, visualizationId, maxZoom = 18, token) {
@@ -24,4 +26,4 @@ class EllipsisRasterLayer {
     }
 }
 
-window.EllipsisRasterLayer = EllipsisRasterLayer;
+export default EllipsisRasterLayer;

@@ -1,0 +1,6 @@
+token
+node_modules
+package-lock.json
+token.js
+src/test/dist/*
+!src/test/dist/index.html

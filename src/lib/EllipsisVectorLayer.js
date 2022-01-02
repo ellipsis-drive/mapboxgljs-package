@@ -1,4 +1,4 @@
-"use strict"
+import EllipsisApi from "./EllipsisApi";
 
 class EllipsisVectorLayer {
     constructor(
@@ -26,7 +26,6 @@ class EllipsisVectorLayer {
         this.blockId = blockId;
         this.layerId = layerId;
         this.maxZoom = maxZoom;
-        //TODO fix this in other packages
         this.onFeatureClick = onFeatureClick;
         this.token = token;
         this.styleId = styleId;
@@ -171,7 +170,6 @@ class EllipsisVectorLayer {
 
     updateView = () => {
         if (!this.tiles || this.tiles.length === 0) return;
-
         let features;
         if (this.loadAll) {
             features = this.cache;
@@ -200,7 +198,7 @@ class EllipsisVectorLayer {
                 this.markers.push(x);
             });
         }
-
+        console.log(features);
         this.getSource().setData({
             type: "FeatureCollection",
             features: features
@@ -238,6 +236,7 @@ class EllipsisVectorLayer {
         if (this.nextPageStart === 4)
             return false;
 
+
         const body = {
             pageStart: this.nextPageStart,
             mapId: this.blockId,
@@ -260,7 +259,9 @@ class EllipsisVectorLayer {
                     this.cache.push(x);
                 });
             }
-        } catch {
+        } catch (e) {
+            console.error('an error occured with getting all geometry');
+            console.log(e);
             return false;
         }
         return true;
@@ -311,6 +312,8 @@ class EllipsisVectorLayer {
                 const res = await EllipsisApi.post("/geometry/tile", body, { token: this.token });
                 result = result.concat(res);
             } catch {
+                console.error('an error occured with getting tile geometry');
+                console.log(e);
                 return false;
             }
         }
@@ -427,4 +430,4 @@ class EllipsisVectorLayer {
 
 }
 
-window.EllipsisVectorLayer = EllipsisVectorLayer;
+export default EllipsisVectorLayer;
