@@ -1,4 +1,4 @@
-import Ellipsis from '../lib';
+import { EllipsisVectorLayer } from '../lib';
 import token from './token';
 
 mapboxgl.accessToken = token;
@@ -30,28 +30,23 @@ map.on("load", () => {
     //     '9649385a-70e5-455a-8013-eb3c052525f4',
     //     '564b79df-6839-4efd-a219-e08883e65f95'
     // ).addTo(map);
-    const borders = Ellipsis.VectorLayer(
-        '1a24a1ee-7f39-4d21-b149-88df5a3b633a',
-        '45c47c8a-035e-429a-9ace-2dff1956e8d9',
-        {
-            onFeatureClick: (x) => console.log(x),
-            loadAll: true
-        }
-    );
+    const borders = new EllipsisVectorLayer({
+        blockId: '1a24a1ee-7f39-4d21-b149-88df5a3b633a',
+        layerId: '45c47c8a-035e-429a-9ace-2dff1956e8d9',
+        onFeatureClick: (x) => console.log(x),
+        loadAll: true
+    });
     console.log(borders);
     borders.addTo(map);
 
-    Ellipsis.VectorLayer(
-        'b8468235-31b5-4959-91a4-0e52a1d4feb6',
-        '44be2542-d20d-457b-b003-698d048d2c6c',
-        {
-            // useMarkers: true,
-            onFeatureClick: (x) => console.log(x),
-            radius: 3,
-            loadAll: false,
-        }
-    ).addTo(map);
-
+    new EllipsisVectorLayer({
+        blockId: 'b8468235-31b5-4959-91a4-0e52a1d4feb6',
+        layerId: '44be2542-d20d-457b-b003-698d048d2c6c',
+        // useMarkers: true,
+        onFeatureClick: (x) => console.log(x),
+        radius: 3,
+        loadAll: false,
+    }).addTo(map);
 });
 
     // // Raster layer
