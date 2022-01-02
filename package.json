@@ -1,12 +1,11 @@
 {
   "name": "mapboxgljs-ellipsis",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Use Ellipsis Drive layers in mapboxgl.js projects.",
   "private": false,
   "keywords": [
     "Ellipsis",
     "Ellipsis Drive",
-    "react leaflet",
     "mapboxgljs"
   ],
   "main": "build/mapboxgljs-ellipsis.js",
