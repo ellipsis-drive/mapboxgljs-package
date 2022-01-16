@@ -2,23 +2,28 @@ import { RasterLayerUtil } from 'ellipsis-js-util';
 
 class EllipsisRasterLayer {
 
-    constructor(options = {}) {
+    constructor(options = { maxZoom: 21 }) {
         this.url = RasterLayerUtil.getSlippyMapUrl(options);
-        this.id = `${options.blockId}_${options.captureId}_${options.visualizationId}`;
-        this.source = `${this.id}_source`;
-        this.type = 'raster';
+        this.id = RasterLayerUtil.getLayerId(options);
     }
 
     addTo(map) {
+
+        this.source = `${this.id}_source`;
         map.addSource(this.source, {
             type: 'raster',
             tiles: [
                 this.url
             ],
-            tileSize: 128
+            tileSize: 128,
         });
 
-        map.addLayer(this);
+        map.addLayer({
+            id: this.id,
+            type: 'raster',
+            source: `${this.id}_source`,
+            maxZoom: options.maxZoom
+        });
         return this;
     }
 }

@@ -1,16 +1,16 @@
 import EllipsisVectorLayer from "./EllipsisVectorLayer";
 import EllipsisRasterLayer from "./EllipsisRasterLayer";
+import EllipsisApi from 'ellipsis-js-util';
 
-//Factory wrapper to make this backwards compatible.
-// const EllipsisVectorLayerFactory = (...params) => new EllipsisVectorLayer(...params);
 
-const Ellipsis = {
-    RasterLayer: (blockId, captureId, visualizationId, options) => {
-        return new EllipsisRasterLayer({ blockId, captureId, visualizationId, ...options });
+export default Ellipsis = {
+    RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
+        return new EllipsisRasterLayer({ blockId, captureId, visualizationId, maxZoom, ...options });
     },
-    VectorLayer: (blockId, layerId, options) => {
+    VectorLayer: (blockId, layerId, options = {}) => {
         return new EllipsisVectorLayer({ blockId, layerId, ...options });
-    }
+    },
+    EllipsisApi
 }
 
-export { EllipsisVectorLayer, EllipsisRasterLayer, Ellipsis }
+export { EllipsisVectorLayer, EllipsisRasterLayer, EllipsisApi }
