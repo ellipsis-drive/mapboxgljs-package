@@ -3,7 +3,7 @@ import EllipsisRasterLayer from "./EllipsisRasterLayer";
 import EllipsisApi from 'ellipsis-js-util';
 
 
-export default Ellipsis = {
+export default {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
         return new EllipsisRasterLayer({ blockId, captureId, visualizationId, maxZoom, ...options });
     },

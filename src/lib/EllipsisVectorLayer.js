@@ -2,9 +2,16 @@ import { VectorLayerUtil } from 'ellipsis-js-util';
 
 class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
 
+
+
+
     constructor(options = {}) {
         super(options);
         this.sourceId = `${this.id}_source`;
+        //TODO add sorting options in base layer
+        // this.loadOptions.onEachFeature = (f) => {
+        //     f.properties.compiledStyle.sortIndex = parseInt((16 ** 6) - f.properties.compiledStyle.fillColor.substr(1), 16);
+        // }
     }
 
     /**
@@ -60,8 +67,8 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
             layout: {},
             paint: {
                 'line-color': ['get', 'borderColor', ['get', 'compiledStyle']],
+                'line-opacity': ['get', 'borderOpacity', ['get', 'compiledStyle']],
                 'line-width': ['get', 'width', ['get', 'compiledStyle']],
-                'line-opacity': ['get', 'borderOpacity', ['get', 'compiledStyle']]
             },
             filter: ['any',
                 ['==', '$type', 'Polygon'],
@@ -75,14 +82,16 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
                 type: 'circle',
                 interactive: this.options.onFeatureClick ? true : false,
                 source: this.sourceId,
-                layout: {},
+                layout: {
+                    'circle-sort-key': ['get', 'sortIndex', ['get', 'compiledStyle']],
+                },
                 paint: {
                     'circle-radius': ['get', 'radius', ['get', 'compiledStyle']],
                     'circle-color': ['get', 'fillColor', ['get', 'compiledStyle']],
                     'circle-opacity': ['get', 'fillOpacity', ['get', 'compiledStyle']],
                     'circle-stroke-color': ['get', 'borderColor', ['get', 'compiledStyle']],
                     'circle-stroke-opacity': ['get', 'borderOpacity', ['get', 'compiledStyle']],
-                    'circle-stroke-width': ['get', 'lineWidth', ['get', 'compiledStyle']]
+                    'circle-stroke-width': ['get', 'width', ['get', 'compiledStyle']]
                 },
                 filter: ['any',
                     ['==', '$type', 'Point']
@@ -95,9 +104,9 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
                 map.on('click', x.id, (e) => this.options.onFeatureClick({ geometry: e.features[0].geometry, properties: e.features[0].properties }, x));
             });
             map.on('mouseenter', `${this.id}_fill`, () => map.getCanvas().style.cursor = 'pointer');
-            map.on('mouseleave', `${this.id}_fill`, () => map.getCanvas().style.cursor = '');
+            map.on('mouseleave', `${this.id}_fill`, () => map.getCanvas().style.cursor = 'default');
             map.on('mouseenter', `${this.id}_points`, () => map.getCanvas().style.cursor = 'pointer');
-            map.on('mouseleave', `${this.id}_points`, () => map.getCanvas().style.cursor = '');
+            map.on('mouseleave', `${this.id}_points`, () => map.getCanvas().style.cursor = 'default');
         }
 
         this.source = map.getSource(this.sourceId);

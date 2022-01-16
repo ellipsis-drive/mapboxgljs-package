@@ -5,6 +5,7 @@ class EllipsisRasterLayer {
     constructor(options = { maxZoom: 21 }) {
         this.url = RasterLayerUtil.getSlippyMapUrl(options);
         this.id = RasterLayerUtil.getLayerId(options);
+        this.options = options;
     }
 
     addTo(map) {
@@ -22,7 +23,7 @@ class EllipsisRasterLayer {
             id: this.id,
             type: 'raster',
             source: `${this.id}_source`,
-            maxZoom: options.maxZoom
+            maxZoom: this.options.maxZoom
         });
         return this;
     }
