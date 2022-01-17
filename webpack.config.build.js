@@ -11,5 +11,8 @@ module.exports = {
     },
     filename: 'mapboxgljs-ellipsis.js',
   },
-  mode: 'production'
+  mode: 'production',
+  externals: {
+    'ellipsis-js-util': 'ellipsis-js-util'
+  }
 };

@@ -1,6 +1,6 @@
 {
   "name": "mapboxgljs-ellipsis",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Use Ellipsis Drive layers in mapboxgl.js projects.",
   "private": false,
   "keywords": [
@@ -24,11 +24,12 @@
     "start": "webpack --config webpack.config.js --watch & live-server src/test/dist"
   },
   "devDependencies": {
+    "ellipsis-js-util": "file:../ellipsis-js-util",
     "live-server": "^1.2.1",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "ellipsis-js-util": "file:../ellipsis-js-util"
+    "ellipsis-js-util": "^1.0.1"
   }
 }

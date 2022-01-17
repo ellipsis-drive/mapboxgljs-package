@@ -27,12 +27,12 @@ map.on("load", () => {
     //     visualizationId: 'f44896e2-ae65-48bc-8fb4-1fd6436d879b',
     // }).addTo(map);
 
-    // const borders = new EllipsisVectorLayer({
-    //     blockId: '1a24a1ee-7f39-4d21-b149-88df5a3b633a',
-    //     layerId: '45c47c8a-035e-429a-9ace-2dff1956e8d9',
-    //     onFeatureClick: (x) => console.log(x),
-    //     loadAll: true
-    // }).addTo(map);
+    const borders = new EllipsisVectorLayer({
+        blockId: '1a24a1ee-7f39-4d21-b149-88df5a3b633a',
+        layerId: '45c47c8a-035e-429a-9ace-2dff1956e8d9',
+        onFeatureClick: (x) => console.log(x),
+        loadAll: true
+    }).addTo(map);
 
     const pointCloud = new EllipsisVectorLayer({
         blockId: 'b8468235-31b5-4959-91a4-0e52a1d4feb6',
