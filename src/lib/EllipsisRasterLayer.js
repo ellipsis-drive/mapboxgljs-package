@@ -1,27 +1,33 @@
+import getEllipsisUtilObject from './getEllipsisUtilObject';
+const RasterLayerUtil = getEllipsisUtilObject('RasterLayerUtil');
+
 class EllipsisRasterLayer {
 
-    constructor(blockId, captureId, visualizationId, maxZoom = 18, token) {
-        this.id = `${blockId}_${captureId}_${visualizationId}`;
-        this.source = `${this.id}_source`;
-        this.type = 'raster';
-        this.url = `${EllipsisApi.apiUrl}/tileService/${blockId}/${captureId}/${visualizationId}/{z}/{x}/{y}`;
-        if (token) {
-            url += '?token=' + token;
-        }
+    constructor(options = { maxZoom: 21 }) {
+        this.url = RasterLayerUtil.getSlippyMapUrl(options);
+        this.id = RasterLayerUtil.getLayerId(options);
+        this.options = options;
     }
 
     addTo(map) {
+
+        this.source = `${this.id}_source`;
         map.addSource(this.source, {
             type: 'raster',
             tiles: [
                 this.url
             ],
-            tileSize: 128
+            tileSize: 128,
         });
 
-        map.addLayer(this);
+        map.addLayer({
+            id: this.id,
+            type: 'raster',
+            source: `${this.id}_source`,
+            maxZoom: this.options.maxZoom
+        });
         return this;
     }
 }
 
-window.EllipsisRasterLayer = EllipsisRasterLayer;
+export default EllipsisRasterLayer;
