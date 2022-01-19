@@ -1,8 +1,7 @@
-import { VectorLayerUtil } from 'ellipsis-js-util';
+import getEllipsisUtilObject from './getEllipsisUtilObject';
+const VectorLayerUtil = getEllipsisUtilObject('VectorLayerUtil');
 
 class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
-
-
 
 
     constructor(options = {}) {

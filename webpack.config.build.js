@@ -6,7 +6,7 @@ module.exports = {
     publicPath: '',
     path: path.resolve(__dirname, 'build'),
     library: {
-      name: 'mapboxgljsEllipsis',
+      name: 'MapboxgljsEllipsis',
       type: 'umd'
     },
     filename: 'mapboxgljs-ellipsis.js',

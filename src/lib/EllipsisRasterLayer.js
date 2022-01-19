@@ -1,4 +1,5 @@
-import { RasterLayerUtil } from 'ellipsis-js-util';
+import getEllipsisUtilObject from './getEllipsisUtilObject';
+const RasterLayerUtil = getEllipsisUtilObject('RasterLayerUtil');
 
 class EllipsisRasterLayer {
 

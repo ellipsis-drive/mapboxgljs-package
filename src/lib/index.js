@@ -1,7 +1,7 @@
 import EllipsisVectorLayer from "./EllipsisVectorLayer";
 import EllipsisRasterLayer from "./EllipsisRasterLayer";
-import EllipsisApi from 'ellipsis-js-util';
-
+import getEllipsisUtilObject from "./getEllipsisUtilObject";
+const EllipsisApi = getEllipsisUtilObject('EllipsisApi');
 
 export default {
     RasterLayer: (blockId, captureId, visualizationId, maxZoom = 21, options = {}) => {
