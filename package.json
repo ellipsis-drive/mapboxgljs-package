@@ -1,6 +1,6 @@
 {
   "name": "mapboxgljs-ellipsis",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Use Ellipsis Drive layers in mapboxgl.js projects.",
   "private": false,
   "keywords": [
