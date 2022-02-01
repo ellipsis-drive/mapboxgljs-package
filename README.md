@@ -72,10 +72,9 @@ new MapboxgljsEllipsis.EllipsisVectorLayer({
 | maxMbPerTile       | The maximum mb to load per tile. Default 16mb.                           |
 | maxTilesInCache    | The number of tiles to keep in cache. Default 500.                       |
 | maxFeaturesPerTile | The maximum number of features to load per tile. Default 200.            |
-| radius             | The radius of the points in the layer. Default 15.                       |
-| lineWidth          | The width/weight of the lines in the layer. Default 5.                   |
 | useMarkers         | Use markers instead of points. Default false.                            |
 | loadAll            | Always load all vectors, even if not visible or far away. Default false  |
+| fetchInterval      | The interval in ms between finishing and starting a request. Default 0   |
 
 _warning_ `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
 
