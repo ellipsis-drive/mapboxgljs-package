@@ -29,16 +29,16 @@ const map = L.map("map", {
 
 // Raster layer
 new MapboxgljsEllipsis.EllipsisRasterLayer({
-  blockId,
-  captureId,
-  visualizationId,
+  pathId,
+  timestampId,
+  layer: layerId,
   maxZoom: 21,
   token: yourToken,
 }).addTo(map);
 
 // Vector layer
 new MapboxgljsEllipsis.EllipsisVectorLayer({
-  blockId,
+  pathId,
   layerId,
   maxZoom: 21,
   token: yourToken,
