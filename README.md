@@ -47,19 +47,19 @@ new MapboxgljsEllipsis.EllipsisVectorLayer({
 
 #### RasterLayer options
 
-| Name            | Description                            |
-| --------------- | -------------------------------------- |
-| blockId         | id of the block                        |
-| captureId       | id of the capture                      |
-| visualizationId | id of the layer                        |
-| maxZoom         | maxZoomlevel of the layer. Default 21. |
-| token           | token of the user                      |
+| Name        | Description                                |
+| ----------- | ------------------------------------------ |
+| pathId      | id of the path                             |
+| timestampId | id of the timestamp                        |
+| layer       | id of the layer or an object describing it |
+| maxZoom     | maxZoomlevel of the layer. Default 21.     |
+| token       | token of the user                          |
 
 #### VectorLayer options
 
 | Name               | Description                                                              |
 | ------------------ | ------------------------------------------------------------------------ |
-| blockId            | Id of the block                                                          |
+| pathId             | Id of the path                                                           |
 | layerId            | Id of the layer                                                          |
 | onFeatureClick     | A function to run on feature click, with as argument the clicked feature |
 | token              | Token of the user                                                        |
