@@ -24,12 +24,11 @@
     "start": "webpack --config webpack.config.js --watch & live-server src/test/dist"
   },
   "devDependencies": {
-    "ellipsis-js-util": "file:../ellipsis-js-util",
     "live-server": "^1.2.1",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "ellipsis-js-util": "^1.0.1"
+    "ellipsis-js-util": "file:../ellipsis-js-util"
   }
 }

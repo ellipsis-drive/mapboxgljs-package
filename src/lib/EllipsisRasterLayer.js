@@ -10,7 +10,6 @@ class EllipsisRasterLayer {
     }
 
     addTo(map) {
-
         this.source = `${this.id}_source`;
         map.addSource(this.source, {
             type: 'raster',
