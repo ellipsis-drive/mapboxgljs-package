@@ -10,8 +10,8 @@
 />
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
 <!-- Import the latest version of the ellipsis library -->
-<script src="https://github.com/ellipsis-drive/ellipsis-js-util/releases/download/1.0.1/ellipsis-js-util-1.0.1.js"></script>
-<script src="https://github.com/ellipsis-drive/mapboxgljs-package/releases/download/3.0.0/mapboxgljs-ellipsis-3.0.0.js"></script>
+<script src="https://github.com/ellipsis-drive/ellipsis-js-util/releases/download/1.1.0/ellipsis-js-util-1.1.0.js"></script>
+<script src="https://github.com/ellipsis-drive/mapboxgljs-package/releases/download/3.1.0/mapboxgljs-ellipsis-3.1.0.js"></script>
 ```
 
 **with npm**
@@ -29,16 +29,16 @@ const map = L.map("map", {
 
 // Raster layer
 new MapboxgljsEllipsis.EllipsisRasterLayer({
-  blockId,
-  captureId,
-  visualizationId,
+  pathId,
+  timestampId,
+  layer: layerId,
   maxZoom: 21,
   token: yourToken,
 }).addTo(map);
 
 // Vector layer
 new MapboxgljsEllipsis.EllipsisVectorLayer({
-  blockId,
+  pathId,
   layerId,
   maxZoom: 21,
   token: yourToken,
@@ -47,19 +47,19 @@ new MapboxgljsEllipsis.EllipsisVectorLayer({
 
 #### RasterLayer options
 
-| Name            | Description                            |
-| --------------- | -------------------------------------- |
-| blockId         | id of the block                        |
-| captureId       | id of the capture                      |
-| visualizationId | id of the layer                        |
-| maxZoom         | maxZoomlevel of the layer. Default 21. |
-| token           | token of the user                      |
+| Name        | Description                                |
+| ----------- | ------------------------------------------ |
+| pathId      | id of the path                             |
+| timestampId | id of the timestamp                        |
+| layer       | id of the layer or an object describing it |
+| maxZoom     | maxZoomlevel of the layer. Default 21.     |
+| token       | token of the user                          |
 
 #### VectorLayer options
 
 | Name               | Description                                                              |
 | ------------------ | ------------------------------------------------------------------------ |
-| blockId            | Id of the block                                                          |
+| pathId             | Id of the path                                                           |
 | layerId            | Id of the layer                                                          |
 | onFeatureClick     | A function to run on feature click, with as argument the clicked feature |
 | token              | Token of the user                                                        |
