@@ -21,7 +21,6 @@ map.on("load", () => {
         type: "raster",
     });
 
-    //https://api.ellipsis-drive.com/v2/path/02da544b-1f11-4be4-9d4f-d549433893b7/raster/timestamp/83f0fa0e-ed9b-4357-a7c6-970da5f2fc89/tile/14/8395/5417?layer=f44896e2-ae65-48bc-8fb4-1fd6436d879b
     // const rotterdam = new EllipsisRasterLayer({
     //     blockId: '02da544b-1f11-4be4-9d4f-d549433893b7',
     //     captureId: '83f0fa0e-ed9b-4357-a7c6-970da5f2fc89',
@@ -31,17 +30,13 @@ map.on("load", () => {
 
 
     //Flevoland working v1 example
-    //api.ellipsis-drive.com/v1/tileService/2057fd2a-66c5-46ef-9c71-bb8f7a180c44/6f4ae070-e084-427c-91d9-e24f97964eca/ea97778d-c454-4380-9ef5-94b15985b58e/11/1053/673?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNTM1N2Y0YjktMWRhOC00NDU0LTliNDEtZjE2NmNlMmE4YzNhIiwiaWF0IjoxNjUxNDEzOTA5LCJleHAiOjE2NTQwOTIzMDl9.o_MaDspXecEWIuNGrQYhB0CfAHao5kzE2vBPlNZV8Dc
 
     //Flevoland equivalent v2 example
-    //https://api.ellipsis-drive.com/v2/path/2057fd2a-66c5-46ef-9c71-bb8f7a180c44/raster/timestamp/6f4ae070-e084-427c-91d9-e24f97964eca/tile/11/1053/673?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNTM1N2Y0YjktMWRhOC00NDU0LTliNDEtZjE2NmNlMmE4YzNhIiwiaWF0IjoxNjUxNDEzOTA5LCJleHAiOjE2NTQwOTIzMDl9.o_MaDspXecEWIuNGrQYhB0CfAHao5kzE2vBPlNZV8Dc
-
 
     const flevoland = new EllipsisRasterLayer({
         blockId: '2057fd2a-66c5-46ef-9c71-bb8f7a180c44',
         timestampId: '6f4ae070-e084-427c-91d9-e24f97964eca',
-        layerId: 'ea97778d-c454-4380-9ef5-94b15985b58e',
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNTM1N2Y0YjktMWRhOC00NDU0LTliNDEtZjE2NmNlMmE4YzNhIiwiaWF0IjoxNjUxNDEzOTA5LCJleHAiOjE2NTQwOTIzMDl9.o_MaDspXecEWIuNGrQYhB0CfAHao5kzE2vBPlNZV8Dc'
+        // layer: 'ea97778d-c454-4380-9ef5-94b15985b58e',
     }).addTo(map);
 
     // const borders = new EllipsisVectorLayer({

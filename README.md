@@ -10,8 +10,8 @@
 />
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
 <!-- Import the latest version of the ellipsis library -->
-<script src="https://github.com/ellipsis-drive/ellipsis-js-util/releases/download/1.0.1/ellipsis-js-util-1.0.1.js"></script>
-<script src="https://github.com/ellipsis-drive/mapboxgljs-package/releases/download/3.0.0/mapboxgljs-ellipsis-3.0.0.js"></script>
+<script src="https://github.com/ellipsis-drive/ellipsis-js-util/releases/download/1.1.0/ellipsis-js-util-1.1.0.js"></script>
+<script src="https://github.com/ellipsis-drive/mapboxgljs-package/releases/download/3.1.0/mapboxgljs-ellipsis-3.1.0.js"></script>
 ```
 
 **with npm**
