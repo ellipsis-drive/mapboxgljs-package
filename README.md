@@ -30,17 +30,12 @@ const map = L.map("map", {
 // Raster layer
 new MapboxgljsEllipsis.EllipsisRasterLayer({
   pathId,
-  timestampId,
-  layer: layerId,
-  maxZoom: 21,
   token: yourToken,
 }).addTo(map);
 
 // Vector layer
 new MapboxgljsEllipsis.EllipsisVectorLayer({
   pathId,
-  layerId,
-  maxZoom: 21,
   token: yourToken,
 }).addTo(map);
 ```
@@ -51,7 +46,7 @@ new MapboxgljsEllipsis.EllipsisVectorLayer({
 | ----------- | ------------------------------------------ |
 | pathId      | id of the path                             |
 | timestampId | id of the timestamp                        |
-| layer       | id of the layer or an object describing it |
+| style       | id of the style or an object describing it |
 | maxZoom     | maxZoomlevel of the layer. Default 21.     |
 | token       | token of the user                          |
 
@@ -60,11 +55,10 @@ new MapboxgljsEllipsis.EllipsisVectorLayer({
 | Name               | Description                                                              |
 | ------------------ | ------------------------------------------------------------------------ |
 | pathId             | Id of the path                                                           |
-| layerId            | Id of the layer                                                          |
+| timestampId            | Id of the timestamp                                                          |
+| style       | id of the style or an object describing it |
 | onFeatureClick     | A function to run on feature click, with as argument the clicked feature |
 | token              | Token of the user                                                        |
-| styleId            | Id of the layer style                                                    |
-| style              | Style object\*                                                           |
 | filter             | A property filter to use                                                 |
 | maxZoom            | maxZoomlevel of the layer. Default 21.                                   |
 | centerPoints       | Boolean whether to render only center points. Default false.             |
