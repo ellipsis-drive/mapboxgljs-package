@@ -40,7 +40,6 @@ function init() {
       "1a24a1ee-7f39-4d21-b149-88df5a3b633a",
       "45c47c8a-035e-429a-9ace-2dff1956e8d9",
       {
-        onFeatureClick: (x) => console.log(x),
         loadAll: true,
       }
     ).addTo(map);
@@ -50,7 +49,6 @@ function init() {
       "44be2542-d20d-457b-b003-698d048d2c6c",
       {
         // useMarkers: true,
-        onFeatureClick: (x) => console.log(x),
         radius: 3,
         loadAll: false,
       }
