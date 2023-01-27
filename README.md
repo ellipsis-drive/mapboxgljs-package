@@ -17,7 +17,7 @@
 **with npm**
 `npm install mapboxgljs-ellipsis`
 
-### Add an Ellipsis Drive block to a mapbox map
+### Add an Ellipsis Drive layer to a mapbox map
 
 #### Example
 
@@ -30,6 +30,8 @@ const map = L.map("map", {
 // Raster layer
 new MapboxgljsEllipsis.EllipsisRasterLayer({
   pathId,
+  timestampId,
+  style:styleId,
   token: yourToken,
 }).addTo(map);
 
@@ -38,6 +40,19 @@ new MapboxgljsEllipsis.EllipsisVectorLayer({
   pathId,
   token: yourToken,
 }).addTo(map);
+```
+
+The timestampId and style are required for raster layers, you can use AsyncEllipsisRasterLayer in order to make use of defaults suggested by the server.
+```js
+
+const createEllipsisRasterLayer = async () => {
+  const someRaster = await MapboxgljsEllipsis.AsyncEllipsisRasterLayer({
+    pathId: "28fb0f5f-e367-4265-b84b-1b8f1a8a6409",
+  });
+  someRaster.addTo(map);
+};
+
+createEllipsisRasterLayer();
 ```
 
 #### RasterLayer options
@@ -92,7 +107,7 @@ _note_ for the style object, refer to this documentation about it: https://app.e
 
 A vectorlayer can add multiple style layers to your mapbox map. To view all added styling, call `yourVectorLayer.getLayers()`. You can also get and use the source that contains geojson with `yourVectorLayer.getSource()`.
 
-### Use the EllipsisApi to login into Ellipsis Drive or view metadata of blocks
+### Use the EllipsisApi to login into Ellipsis Drive or view metadata of layers
 
 #### EllipsisApi.login description
 
@@ -115,7 +130,7 @@ expires: number; //expiration time in milliseconds
 **parameters**
 | name | description |
 | -- | -- |
-| pathId | The id of the block, folder or layer. |
+| pathId | The id of the folder or layer. |
 | user | (Optional) An user object which can contain a token like `user: {token: mytoken}` |
 
 **return value**
