@@ -14,7 +14,6 @@ const map = new mapboxgl.Map({
 });
 
 const createEllipsisRasterLayer = async () => {
-  return;
   const someRaster = await AsyncEllipsisRasterLayer({
     pathId: "28fb0f5f-e367-4265-b84b-1b8f1a8a6409",
   });
