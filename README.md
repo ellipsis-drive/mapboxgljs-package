@@ -81,7 +81,6 @@ createEllipsisRasterLayer();
 | maxMbPerTile       | The maximum mb to load per tile. Default 16mb.                           |
 | maxTilesInCache    | The number of tiles to keep in cache. Default 500.                       |
 | maxFeaturesPerTile | The maximum number of features to load per tile. Default 200.            |
-| useMarkers         | Use markers instead of points. Default false.                            |
 | loadAll            | Always load all vectors, even if not visible or far away. Default false  |
 | fetchInterval      | The interval in ms between finishing and starting a request. Default 0   |
 
