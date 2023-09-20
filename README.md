@@ -22,13 +22,20 @@
 #### Example
 
 ```js
+import {
+	EllipsisVectorLayer,
+	EllipsisRasterLayer,
+	AsyncEllipsisRasterLayer,
+} from 'mapboxgljs-ellipsis';
+
+
 const map = L.map("map", {
   center: [51.505, -0.09],
   zoom: 13,
 });
 
 // Raster layer
-new MapboxgljsEllipsis.EllipsisRasterLayer({
+new EllipsisRasterLayer({
   pathId,
   timestampId,
   style:styleId,
@@ -36,7 +43,7 @@ new MapboxgljsEllipsis.EllipsisRasterLayer({
 }).addTo(map);
 
 // Vector layer
-new MapboxgljsEllipsis.EllipsisVectorLayer({
+new EllipsisVectorLayer({
   pathId,
   token: yourToken,
 }).addTo(map);
