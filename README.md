@@ -86,9 +86,8 @@ createEllipsisRasterLayer();
 | centerPoints       | Boolean whether to render only center points. Default false.             |
 | pageSize           | Size to retreive per step. Default 25, max 3000.                         |
 | maxMbPerTile       | The maximum mb to load per tile. Default 16mb.                           |
-| maxTilesInCache    | The number of tiles to keep in cache. Default 500.                       |
+| maxRenderTiles    | The number of tiles to keep in view. Default 500.                       |
 | maxFeaturesPerTile | The maximum number of features to load per tile. Default 200.            |
-| loadAll            | Always load all vectors, even if not visible or far away. Default false  |
 | fetchInterval      | The interval in ms between finishing and starting a request. Default 0   |
 
 _warning_ `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
