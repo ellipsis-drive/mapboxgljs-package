@@ -13,15 +13,6 @@ const map = new mapboxgl.Map({
   zoom: 16, // starting zoom
 });
 
-const createEllipsisRasterLayer = async () => {
-  const someRaster = await AsyncEllipsisRasterLayer({
-    pathId: "28fb0f5f-e367-4265-b84b-1b8f1a8a6409",
-  });
-  someRaster.addTo(map);
-};
-
-createEllipsisRasterLayer();
-
 map.on("load", () => {
   map.addSource("portland", {
     type: "raster",
@@ -29,10 +20,9 @@ map.on("load", () => {
   });
 
   const plots = new EllipsisVectorLayer({
-    pathId: "2109c37a-d549-45dd-858e-7eddf1bd7c22",
-    pageSize: 1000,
-    maxFeaturesPerTile: 10000,
-    maxMbPerTile: 1000000,
-    maxZoom: 21,
+    pathId: "09f5e90d-f011-437c-b789-3cedfbca80bb",
+    onFeatureClick: (f) => {
+      console.log("clicked", f);
+    },
   }).addTo(map);
 });
