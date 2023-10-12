@@ -10,8 +10,8 @@
 />
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
 <!-- Import the latest version of the ellipsis library -->
-<script src="https://github.com/ellipsis-drive/ellipsis-js-util/releases/download/1.1.0/ellipsis-js-util-1.3.3.js"></script>
-<script src="https://github.com/ellipsis-drive/mapboxgljs-package/releases/download/3.1.0/mapboxgljs-ellipsis-3.1.2.js"></script>
+<script src="https://github.com/ellipsis-drive/ellipsis-js-util/releases/download/1.3.3/ellipsis-js-util-1.3.3.js"></script>
+<script src="https://github.com/ellipsis-drive/mapboxgljs-package/releases/download/3.1.2/mapboxgljs-ellipsis-3.1.2.js"></script>
 ```
 
 **with npm**
@@ -22,13 +22,20 @@
 #### Example
 
 ```js
+import {
+	EllipsisVectorLayer,
+	EllipsisRasterLayer,
+	AsyncEllipsisRasterLayer,
+} from 'mapboxgljs-ellipsis';
+
+
 const map = L.map("map", {
   center: [51.505, -0.09],
   zoom: 13,
 });
 
 // Raster layer
-new MapboxgljsEllipsis.EllipsisRasterLayer({
+new EllipsisRasterLayer({
   pathId,
   timestampId,
   style:styleId,
@@ -36,7 +43,7 @@ new MapboxgljsEllipsis.EllipsisRasterLayer({
 }).addTo(map);
 
 // Vector layer
-new MapboxgljsEllipsis.EllipsisVectorLayer({
+new EllipsisVectorLayer({
   pathId,
   token: yourToken,
 }).addTo(map);
@@ -79,9 +86,8 @@ createEllipsisRasterLayer();
 | centerPoints       | Boolean whether to render only center points. Default false.             |
 | pageSize           | Size to retreive per step. Default 25, max 3000.                         |
 | maxMbPerTile       | The maximum mb to load per tile. Default 16mb.                           |
-| maxTilesInCache    | The number of tiles to keep in cache. Default 500.                       |
+| maxRenderTiles    | The number of tiles to keep in view. Default 500.                       |
 | maxFeaturesPerTile | The maximum number of features to load per tile. Default 200.            |
-| loadAll            | Always load all vectors, even if not visible or far away. Default false  |
 | fetchInterval      | The interval in ms between finishing and starting a request. Default 0   |
 
 _warning_ `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
