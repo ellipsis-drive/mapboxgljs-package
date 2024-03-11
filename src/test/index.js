@@ -9,8 +9,8 @@ mapboxgl.accessToken =
 const map = new mapboxgl.Map({
   container: "map", // container ID
   style: "mapbox://styles/mapbox/streets-v11", // style URL
-  center: [4.633205849096186, 52.373527706597514], // starting position [lng, lat]
-  zoom: 16, // starting zoom
+  center: [-117.30068, 56.23365],
+  zoom: 13,
 });
 
 map.on("load", () => {
@@ -19,10 +19,8 @@ map.on("load", () => {
     url: "mapbox://examples.32xkp0wd",
   });
 
-  const plots = new EllipsisVectorLayer({
-    pathId: "09f5e90d-f011-437c-b789-3cedfbca80bb",
-    onFeatureClick: (f) => {
-      console.log("clicked", f);
-    },
+  new EllipsisVectorLayer({
+    pathId: "974b3911-ef1c-42ca-a21f-ce804d592ba0",
+    style: "38d46a9e-5ff9-4f94-8ace-fd40a53dbc23",
   }).addTo(map);
 });

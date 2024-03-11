@@ -38,10 +38,9 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
 
     let timestampId = this.options.timestampId;
 
-    const res = await EllipsisApi.getPath(
-      this.options.pathId,
-      this.options.token
-    );
+    const res = await EllipsisApi.getPath(this.options.pathId, {
+      token: this.options.token,
+    });
 
     if (!this.options.timestampId) {
       const defaultTimestampId = res?.vector?.timestamps
@@ -54,11 +53,10 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
         )?.id;
       timestampId = defaultTimestampId;
     }
-    let style = this.options.style;
-    if (!this.options.style) {
+    let style = this.options.styleId;
+    if (!this.options.styleId) {
       style = res?.vector.styles.find((s) => s.default)?.id;
     }
-
     let vectorTileInfo = { hasTiles: false, zoom: 0 };
 
     if (timestampId) {
@@ -82,14 +80,13 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
         const styleSheet = await EllipsisApi.get(url, null, {
           token: this.options.token,
         });
-        console.log("styleSheet", styleSheet);
 
         //add the vector layers
 
         let mvtUrl = `${EllipsisApi.apiUrl}/ogc/mvt/${this.options.pathId}/{z}/{x}/{y}?zipTheResponse=true&style=${styleParam}&timestampId=${timestampId}`;
 
         if (this.options.token) {
-          url = url + "&token=" + this.options.token;
+          mvtUrl = mvtUrl + "&token=" + this.options.token;
         }
 
         map.addSource(this.id + "-tiles", {
@@ -124,8 +121,6 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
         }
       }
     }
-
-    console.log("tile info", vectorTileInfo);
 
     map.addSource(this.sourceId, {
       type: "geojson",
