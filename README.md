@@ -62,6 +62,10 @@ const createEllipsisRasterLayer = async () => {
 createEllipsisRasterLayer();
 ```
 
+
+#### Obtaining tokens
+To use layers that are not set to public or link sharing you need to pass a token as a parameter. See [here](https://docs.ellipsis-drive.com/developers/authentication-options) for how to obtain such a token.
+
 #### RasterLayer options
 
 | Name        | Description                                |
@@ -71,6 +75,8 @@ createEllipsisRasterLayer();
 | style       | id of the style or an object describing it |
 | maxZoom     | maxZoomlevel of the layer. Default 21.     |
 | token       | token of the user                          |
+
+_note_ for the style object, refer to [this documentation about it](https://docs.ellipsis-drive.com/developers/api-v3/path-raster/styles/add-style).
 
 #### VectorLayer options
 
@@ -94,41 +100,15 @@ _warning_ `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeatur
 
 _onFeatureClick_ gets passed two parameters: the geojson of the clicked feature and the event.
 
-_note_ for the style object, refer to this documentation about it: https://app.ellipsis-drive.com/developer/javascript/documentation#POST%20geometryLayers%2FaddStyle.
-
-<details>
-<summary>Or this copied info</summary>
-○ 'rules': Parameters contains the property 'rules' being an array of objects with required properties 'property', 'value' and 'color' and optional properties 'operator' and 'alpha'. 'property' should be the name of the property to style by and should be of type string, 'value' should be the cutoff point of the style and must be the same type as the property, 'color' is the color of the style and must be a rgb hex code, 'operator'determines whether the styling should occur at, under or over the cutoff point and must be one of '=', '<', '>', '<=', '>=' or '!=' with default '=' and 'alpha' should be the transparency of the color on a 0 to 1 scale with default 0.5.
-
-○ 'rangeToColor': Parameters contains the required property 'rangeToColor' and optional property 'periodic', where 'rangeToColor' should be an array of objects with required properties 'property', 'fromValue', 'toValue' and 'color' and optional property 'alpha', where 'property' should be the name of the property to style by and should be of type string, 'fromValue' and 'toValue' should be the minimum and maximum value of the range respectively, 'color' is the color to use if the property falls inclusively between the fromValue and toValue and should be a rgb hex code color and 'alpha' should be the transparency of the color on a 0 to 1 scale with default 0.5. 'periodic' should be a positive float used when the remainder from dividing the value of the property by the periodic should be used to evaluate the ranges instead.
-
-○ 'transitionPoints': Parameters contains the required properties 'property' and 'transitionPoints' and optional property 'periodic', where 'property' should be the name of the property to style by and should be of type string, 'transitionPoints' should be an array of objects with required properties 'value' and 'color' and optional property 'alpha', where 'value' should be the value at which the next transition starts, 'color' is the color to use if the property falls in the interval before or after the transition point and should be a rgb hex code color and 'alpha' should be the transparency of the color on a 0 to 1 scale with 0.5 as default. 'periodic' should be a positive float used when the remainder from dividing the value of the property by the periodic should be used to evaluate the ranges instead.
-
-○ 'random': Parameters contains the required property 'property' and optional property 'alpha', where 'property' should be the name of the property by which to randomly assign colors and should be of type string and 'alpha' should be the transparency of the color on a 0 to 1 scale with default 0.5.
-
-</details>
+_note_ for the style object, refer to [this documentation about it](https://docs.ellipsis-drive.com/developers/api-v3/path-vector/styles/add-style).
 
 #### VectorLayer styling
 
 A vectorlayer can add multiple style layers to your mapbox map. To view all added styling, call `yourVectorLayer.getLayers()`. You can also get and use the source that contains geojson with `yourVectorLayer.getSource()`.
 
-### Use the EllipsisApi to login into Ellipsis Drive or view metadata of layers
+### Use the EllipsisApi to view metadata of layers
 
-#### EllipsisApi.login description
 
-**parameters**
-| name | description |
-| -- | -- |
-| username | The username of your ellipsis-drive account |
-| password | The password of your ellipsis-drive account |
-| validFor | (Optional) The number of second the access token will be valid for. Default 86400 (24 hours). |
-
-**return value**
-
-```ts
-token: string; //token to use in other api calls
-expires: number; //expiration time in milliseconds
-```
 
 #### EllipsisApi.getInfo description
 
