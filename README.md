@@ -87,7 +87,7 @@ _note_ for the style object, refer to [this documentation about it](https://docs
 | onFeatureClick     | A function to run on feature click, with as argument the clicked feature |
 | token              | Token of the user                                                        |
 | filter             | A property filter to use                                                 |
-| zoom            | maxZoomlevel of the layer. If not given uses the zoom given in the layer metadata                                   |
+
 
 
 _warning_ `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
