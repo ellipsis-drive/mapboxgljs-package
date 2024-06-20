@@ -85,6 +85,7 @@ _note_ for the style object, refer to [this documentation about it](https://docs
 | timestampId            | Id of the timestamp                                                          |
 | style       | id of the style or an object describing it |
 | onFeatureClick     | A function to run on feature click, with as argument the clicked feature |
+| onFeatureHover     | A function to run on when the cursor hovers over a feature. With arguments the feature and the event |
 | token              | Token of the user                                                        |
 | id       | a prefix to use in all sources and layers that are added to the map |
 | filter             | A property filter to use                                                 |
