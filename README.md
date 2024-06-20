@@ -73,7 +73,6 @@ To use layers that are not set to public or link sharing you need to pass a toke
 | pathId      | id of the path                             |
 | timestampId | id of the timestamp                        |
 | style       | id of the style or an object describing it |
-| maxZoom     | maxZoomlevel of the layer. Default 21.     |
 | token       | token of the user                          |
 
 _note_ for the style object, refer to [this documentation about it](https://docs.ellipsis-drive.com/developers/api-v3/path-raster/styles/add-style).
