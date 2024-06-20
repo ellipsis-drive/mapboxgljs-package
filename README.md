@@ -95,6 +95,7 @@ _note_ for the style object, refer to [this documentation about it](https://docs
 | maxRenderTiles    | The number of tiles to keep in view. Default 500.                       |
 | maxFeaturesPerTile | The maximum number of features to load per tile. Default 200.            |
 | fetchInterval      | The interval in ms between finishing and starting a request. Default 0   |
+| loadAll      | Boolean whehter to keep loading features indefinitely. Default false.   |
 
 _warning_ `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
 
