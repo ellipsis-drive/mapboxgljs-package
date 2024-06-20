@@ -24,6 +24,14 @@ map.on("load", () => {
     maxFeaturesPerTile: 30,
     pageSize: 1000,
     maxFeaturesPerTile: 100000,
-    filter: [],
   }).addTo(map);
+
+  const createEllipsisRasterLayer = async () => {
+    const someRaster = await AsyncEllipsisRasterLayer({
+      pathId: "28fb0f5f-e367-4265-b84b-1b8f1a8a6409",
+    });
+    someRaster.addTo(map);
+  };
+
+  createEllipsisRasterLayer();
 });

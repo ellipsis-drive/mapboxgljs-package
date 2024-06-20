@@ -35,6 +35,15 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
    * @param {mapboxgl.Map} map
    * @returns {this} a reference to this layer
    */
+
+  getZoomOffset(t) {
+    this.zoomOffset =
+      (t.precompute.vectorTileZoom || t.precompute.vectorTileZoom === 0) &&
+      !this.options.filter
+        ? t.precompute.vectorTileZoom
+        : 0;
+  }
+
   async addTo(map) {
     this.map = map;
 
@@ -69,12 +78,10 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
       typeof style === "string" || style instanceof String
         ? style
         : JSON.stringify(style);
-
-    const zoomFrom =
-      (t.precompute.vectorTileZoom || t.precompute.vectorTileZoom === 0) &&
-      !this.options.filter
-        ? t.precompute.vectorTileZoom
-        : 0;
+    if (!this.zoomOffset) {
+      this.getZoomOffset(t);
+    }
+    const zoomFrom = this.zoomOffset;
 
     if (t.precompute.hasVectorTiles && !this.options.filter) {
       vectorTileInfo = {
@@ -146,9 +153,9 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
       source: this.sourceId,
       layout: {},
       paint: {
-        "line-color": ["get", "borderColor", ["get", "compiledStyle"]],
+        "line-color": ["get", "color", ["get", "compiledStyle"]],
         "line-opacity": ["get", "borderOpacity", ["get", "compiledStyle"]],
-        "line-width": ["get", "width", ["get", "compiledStyle"]],
+        "line-width": ["get", "weight", ["get", "compiledStyle"]],
       },
       filter: [
         "any",
@@ -171,13 +178,13 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
         "circle-radius": ["get", "radius", ["get", "compiledStyle"]],
         "circle-color": ["get", "fillColor", ["get", "compiledStyle"]],
         "circle-opacity": ["get", "fillOpacity", ["get", "compiledStyle"]],
-        "circle-stroke-color": ["get", "borderColor", ["get", "compiledStyle"]],
+        "circle-stroke-color": ["get", "color", ["get", "compiledStyle"]],
         "circle-stroke-opacity": [
           "get",
           "borderOpacity",
           ["get", "compiledStyle"],
         ],
-        "circle-stroke-width": ["get", "width", ["get", "compiledStyle"]],
+        "circle-stroke-width": ["get", "weight", ["get", "compiledStyle"]],
       },
       filter: ["any", ["==", "$type", "Point"]],
     });
@@ -220,10 +227,12 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
     if (this.options.loadAll) return this;
 
     map.on("zoom", (x) => {
+      if (this.map.getZoom() < this.zoomOffset) return;
       this.update();
     });
 
     map.on("moveend", (x) => {
+      if (this.map.getZoom() < this.zoomOffset) return;
       this.update();
     });
     return this;
