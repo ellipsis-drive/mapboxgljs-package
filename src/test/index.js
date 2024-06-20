@@ -9,7 +9,7 @@ mapboxgl.accessToken =
 const map = new mapboxgl.Map({
   container: "map", // container ID
   style: "mapbox://styles/mapbox/streets-v11", // style URL
-  center: [-117.30068, 56.23365],
+  center: [0, 53.23365],
   zoom: 13,
 });
 
@@ -20,7 +20,10 @@ map.on("load", () => {
   });
 
   new EllipsisVectorLayer({
-    pathId: "974b3911-ef1c-42ca-a21f-ce804d592ba0",
-    style: "38d46a9e-5ff9-4f94-8ace-fd40a53dbc23",
+    pathId: "55f102b7-e660-4045-8f99-35dbba2a53fb",
+    maxFeaturesPerTile: 30,
+    pageSize: 1000,
+    maxFeaturesPerTile: 100000,
+    filter: [],
   }).addTo(map);
 });

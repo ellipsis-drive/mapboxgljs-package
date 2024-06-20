@@ -5,7 +5,7 @@ const EllipsisApi = getEllipsisUtilObject("EllipsisApi");
 class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
   constructor(options = {}) {
     super(options);
-    this.sourceId = `${this.id}_source`;
+    this.sourceId = options.id ?? `${this.id}_source`;
     //TODO add sorting options in base layer
     // this.loadOptions.onEachFeature = (f) => {
     //     f.properties.compiledStyle.sortIndex = parseInt((16 ** 6) - f.properties.compiledStyle.fillColor.substr(1), 16);
@@ -25,7 +25,9 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
   getLayers() {
     if (!this.map) return [];
     if (!this.map.getStyle() || !this.map.getStyle().layers) return [];
-    return this.map.getStyle().layers.filter((x) => x.id.startsWith(this.id));
+    return this.map
+      .getStyle()
+      .layers.filter((x) => x.id.startsWith(this.sourceId));
   }
 
   /**
@@ -59,66 +61,58 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
     }
     let vectorTileInfo = { hasTiles: false, zoom: 0 };
 
-    if (timestampId) {
-      const t = res?.vector?.timestamps.find((x) => x.id === timestampId);
-      const styleParam =
-        typeof style === "string" || style instanceof String
-          ? style
-          : JSON.stringify(style);
-      if (t.precompute.hasVectorTiles) {
-        const zoomFrom =
-          this.options.zoom && this.options.zoom <= t.precompute.vectorTileZoom
-            ? 24
-            : t.precompute.vectorTileZoom;
-        vectorTileInfo = {
-          hasTiles: true,
-          zoom: t.precompute.vectorTileZoom,
-          zoomFrom: zoomFrom,
+    if (!timestampId) {
+      throw new Error("No valid timestamp found in layer");
+    }
+    const t = res?.vector?.timestamps.find((x) => x.id === timestampId);
+    const styleParam =
+      typeof style === "string" || style instanceof String
+        ? style
+        : JSON.stringify(style);
+
+    const zoomFrom =
+      (t.precompute.vectorTileZoom || t.precompute.vectorTileZoom === 0) &&
+      !this.options.filter
+        ? t.precompute.vectorTileZoom
+        : 0;
+
+    if (t.precompute.hasVectorTiles && !this.options.filter) {
+      vectorTileInfo = {
+        hasTiles: true,
+        zoom: t.precompute.vectorTileZoom,
+        zoomFrom: zoomFrom,
+      };
+      let url = `/ogc/mvt/${this.options.pathId}/styleSheet?timestampId=${timestampId}&style=${styleParam}&zoom=21`;
+
+      const styleSheet = await EllipsisApi.get(url, null, {
+        token: this.options.token,
+      });
+
+      //add the vector layers
+
+      let mvtUrl = `${EllipsisApi.apiUrl}/ogc/mvt/${this.options.pathId}/{z}/{x}/{y}?zipTheResponse=true&style=${styleParam}&timestampId=${timestampId}`;
+
+      if (this.options.token) {
+        mvtUrl = mvtUrl + "&token=" + this.options.token;
+      }
+
+      map.addSource(this.sourceId + "-tiles", {
+        type: "vector",
+        tiles: [mvtUrl],
+        maxzoom: vectorTileInfo.zoom,
+      });
+
+      const sourceLoads = styleSheet.layers;
+      for (let j = 0; j < sourceLoads.length; j++) {
+        const sourceLoad = sourceLoads[j];
+        let LOAD = {
+          ...sourceLoad,
+          source: this.sourceId + "-tiles",
+          id: this.sourceId + "_tiles_" + sourceLoad.id,
+          minzoom: 0,
+          maxzoom: vectorTileInfo.zoomFrom,
         };
-        let url = `/ogc/mvt/${this.options.pathId}/styleSheet?timestampId=${timestampId}&style=${styleParam}&zoom=21`;
-
-        const styleSheet = await EllipsisApi.get(url, null, {
-          token: this.options.token,
-        });
-
-        //add the vector layers
-
-        let mvtUrl = `${EllipsisApi.apiUrl}/ogc/mvt/${this.options.pathId}/{z}/{x}/{y}?zipTheResponse=true&style=${styleParam}&timestampId=${timestampId}`;
-
-        if (this.options.token) {
-          mvtUrl = mvtUrl + "&token=" + this.options.token;
-        }
-
-        map.addSource(this.id + "-tiles", {
-          type: "vector",
-          tiles: [mvtUrl],
-          maxzoom: vectorTileInfo.zoom,
-        });
-
-        const sourceLoads = styleSheet.layers;
-        for (let j = 0; j < sourceLoads.length; j++) {
-          const sourceLoad = sourceLoads[j];
-          let LOAD = {
-            ...sourceLoad,
-            source: this.id + "-tiles",
-            id: this.id + "_tiles_" + sourceLoad.id,
-            minzoom: 0,
-            maxzoom: vectorTileInfo.zoomFrom,
-          };
-          map.addLayer(LOAD);
-          if (this.options.onFeatureClick) {
-            map.on(
-              "mouseenter",
-              this.id + "_tiles_" + sourceLoad.id,
-              () => (map.getCanvas().style.cursor = "pointer")
-            );
-            map.on(
-              "mouseleave",
-              this.id + "_tiles_" + sourceLoad.id,
-              () => (map.getCanvas().style.cursor = "default")
-            );
-          }
-        }
+        map.addLayer(LOAD);
       }
     }
 
@@ -130,12 +124,13 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
       },
     });
     map.addLayer({
-      id: `${this.id}_fill`,
+      id: `${this.sourceId}_fill`,
       type: "fill",
       interactive: this.options.onFeatureClick ? true : false,
       source: this.sourceId,
       layout: {},
-      minzoom: vectorTileInfo.zoomFrom,
+      minzoom: zoomFrom,
+      maxzoom: 24,
       paint: {
         "fill-color": ["get", "fillColor", ["get", "compiledStyle"]],
         "fill-opacity": ["get", "fillOpacity", ["get", "compiledStyle"]],
@@ -143,9 +138,10 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
       filter: ["any", ["==", "$type", "Polygon"]],
     });
     map.addLayer({
-      id: `${this.id}_outline`,
+      id: `${this.sourceId}_outline`,
       type: "line",
-      minzoom: vectorTileInfo.zoomFrom,
+      minzoom: zoomFrom,
+      maxzoom: 24,
       interactive: this.options.onFeatureClick ? true : false,
       source: this.sourceId,
       layout: {},
@@ -162,9 +158,10 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
     });
 
     map.addLayer({
-      id: `${this.id}_points`,
+      id: `${this.sourceId}_points`,
       type: "circle",
-      minzoom: vectorTileInfo.zoomFrom,
+      minzoom: zoomFrom,
+      maxzoom: 24,
       interactive: this.options.onFeatureClick ? true : false,
       source: this.sourceId,
       layout: {
@@ -186,49 +183,34 @@ class EllipsisVectorLayer extends VectorLayerUtil.EllipsisVectorLayerBase {
     });
 
     //Handle feature clicks and mouse styling
-    if (this.options.onFeatureClick) {
+    if (this.options.onFeatureClick || this.options.onFeatureHover) {
       this.getLayers().forEach((x) => {
         map.on("click", x.id, (e) =>
           this.options.onFeatureClick(
             {
               geometry: e.features[0].geometry,
               properties: e.features[0].properties,
+              layer: x,
             },
-            x
+            e
           )
         );
-      });
-      map.on(
-        "mouseenter",
-        `${this.id}_fill`,
-        () => (map.getCanvas().style.cursor = "pointer")
-      );
-      map.on(
-        "mouseleave",
-        `${this.id}_fill`,
-        () => (map.getCanvas().style.cursor = "default")
-      );
-      map.on(
-        "mouseenter",
-        `${this.id}_points`,
-        () => (map.getCanvas().style.cursor = "pointer")
-      );
-      map.on(
-        "mouseleave",
-        `${this.id}_points`,
-        () => (map.getCanvas().style.cursor = "default")
-      );
 
-      map.on(
-        "mouseenter",
-        `${this.id}_outline`,
-        () => (map.getCanvas().style.cursor = "pointer")
-      );
-      map.on(
-        "mouseleave",
-        `${this.id}_outline`,
-        () => (map.getCanvas().style.cursor = "default")
-      );
+        map.on("mousemove", x.id, (e) => {
+          map.getCanvas().style.cursor = "pointer";
+          // Set variables equal to the current feature's magnitude, location, and time
+          if (this.options.onFeatureHover) {
+            this.options.onFeatureHover(
+              {
+                geometry: e.features[0].geometry,
+                properties: e.features[0].properties,
+                layer: x,
+              },
+              e
+            );
+          }
+        });
+      });
     }
 
     this.source = map.getSource(this.sourceId);
