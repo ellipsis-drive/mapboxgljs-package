@@ -86,11 +86,10 @@ _note_ for the style object, refer to [this documentation about it](https://docs
 | style       | id of the style or an object describing it |
 | onFeatureClick     | A function to run on feature click, with as argument the clicked feature |
 | token              | Token of the user                                                        |
+| id       | a prefix to use in all sources and layers that are added to the map |
 | filter             | A property filter to use                                                 |
 
 
-
-_warning_ `loadAll=true` will ignore maxMbPerTile, maxTilesInCache and maxFeaturesPerTile settings.
 
 _onFeatureClick_ gets passed two parameters: the geojson of the clicked feature and the event.
 
