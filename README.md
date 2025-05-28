@@ -89,6 +89,7 @@ _note_ for the style object, refer to [this documentation about it](https://docs
 | token              | Token of the user                                                        |
 | id       | a prefix to use in all sources and layers that are added to the map |
 | filter             | A property filter to use                                                 |
+| onlyTiles             | Boolean, if true only the vector tiles source is being used, default false                                                 |
 
 
 
