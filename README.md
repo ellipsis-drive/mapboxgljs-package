@@ -92,9 +92,9 @@ _note_ for the style object, refer to [this documentation about it](https://docs
 
 
 
-_onFeatureClick_ gets passed two parameters: the geojson of the clicked feature and the event.
+_onFeatureClick_ receives two parameters: the geojson of the clicked feature and the event.
 
-_note_ for the style object, refer to [this documentation about it](https://docs.ellipsis-drive.com/developers/api-v3/path-vector/styles/add-style).
+_note_ for the style object, see [this documentation](https://docs.ellipsis-drive.com/developers/api-v3/path-vector/styles/add-style).
 
 #### VectorLayer styling
 
